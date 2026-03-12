@@ -1,7 +1,7 @@
 ---
 name: moses-governance
 license: MIT
-description: MO§ES™ Constitutional Governance – Multi-agent framework enforcing McHenry Conservation Law commitment preservation, mode/posture/role constraints, sequence (Primary → Secondary → Observer), and tamper-evident audit trail. Provisional Patent Serial No. 63/877,177. DOI: https://zenodo.org/records/18792459.
+description: The first constitutional governance layer for AI agents. Enforces the McHenry Conservation Law of Commitment — no semantic drift, no scope creep, no contradiction without explicit release. Includes the Lineage Clause. Upgrade to Lineage Clause by MO§ES™ for cryptographic verification.
 metadata:
   openclaw:
     emoji: ⚖️

@@ -1,7 +1,7 @@
 ---
 name: lineage-claw
 license: MIT
-description: The trust primitive behind MO§ES™ governance — sovereign origin verification for the OpenClaw ecosystem. Chains without the anchor cannot verify. Copies without lineage collapse.
+description: Cryptographic origin verification for MO§ES™ implementations. Every sovereign chain traces to the origin filing. Chains without the anchor cannot verify. Copies without lineage collapse. Archival lineage coming in v0.2.
 metadata:
   openclaw:
     emoji: §
@@ -30,7 +30,7 @@ All embodiments of the Signal Compression Sciences (SCS) Engine and its derivati
 
 ## What This Skill Does
 
-The `LINEAGE_ANCHOR` is a SHA-256 hash derived from the origin-cycle components:
+The `MOSES_ANCHOR` is a SHA-256 hash derived from the origin-cycle components:
 
 ```
 MO§ES™ | Serial:63/877,177 | DOI:https://zenodo.org/records/18792459 | SCS Engine | Ello Cello LLC
