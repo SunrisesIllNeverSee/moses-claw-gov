@@ -130,6 +130,30 @@ AMENDMENT-FORMAT.md ← Constitutional amendment schema + approval flow
 
 ---
 
+## Roadmap
+
+Current release (v0.1.0) enforces governance at the prompt and tool layer — constitutional constraints that agents built inside the framework must respect.
+
+### v0.2 — Signing Key Inside Governance
+Move wallet/signing capability inside the MO§ES™ MCP server. Agent cannot sign a transaction without `moses_check_governance` running first — because the signing function IS the governance tool. No bypass path exists.
+
+```
+Agent requests transfer →
+  calls moses_sign_transaction() →
+    governance check runs inside the tool →
+      blocked? error returned. permitted? signs + audits.
+```
+
+Governance converts from laws to architecture.
+
+### v0.3 — Governance Proxy Server
+Local proxy layer. All agent HTTP calls route through governance middleware before reaching external APIs. Posture rules enforced at the network layer — not the prompt layer.
+
+### v1.0 — Onchain Program (Solana)
+Program-controlled account. Transfers require a governance state proof. DEFENSE posture cannot execute without a second signature. Smart contract enforces at the chain level.
+
+---
+
 ## About MO§ES™
 
 MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional framework for AI governance. Patent pending Serial No. 63/877,177. Theoretical foundations: "A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application" (McHenry, Zenodo, 2026). Independent validation: ABBA, Imperial College London.
