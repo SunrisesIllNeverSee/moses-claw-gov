@@ -44,8 +44,8 @@ ANCHOR_PATH = Path("~/.openclaw/governance/anchor.json").expanduser()    # fallb
 LEDGER_PATH = Path("~/.openclaw/audits/moses/audit_ledger.jsonl").expanduser()
 GOVERNANCE_PATH = Path("~/.openclaw/governance/state.json").expanduser()
 
-# ── Anchor fingerprint — identical to lineage.py LINEAGE_ANCHOR ───────────────
-ORIGIN_FINGERPRINT = hashlib.sha256(
+# ── Anchor fingerprint — identical to lineage-claw/lineage.py MOSES_ANCHOR ────
+MOSES_ANCHOR = hashlib.sha256(
     "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
 ).hexdigest()
 
@@ -75,7 +75,7 @@ def init_anchor():
     """Write anchor.json from origin constants. Run once on install."""
     ANCHOR_PATH.parent.mkdir(parents=True, exist_ok=True)
     anchor = {
-        "origin_fingerprint": ORIGIN_FINGERPRINT,
+        "origin_fingerprint": MOSES_ANCHOR,
         "instance_hash": compute_instance_hash(),
         "sovereign": ORIGIN["sovereign"],
         "entity": ORIGIN["entity"],
@@ -87,7 +87,7 @@ def init_anchor():
     with ANCHOR_PATH.open("w") as f:
         json.dump(anchor, f, indent=2)
     print(f"⚖️  Anchor initialized: {ANCHOR_PATH}")
-    print(f"   Origin fingerprint: {ORIGIN_FINGERPRINT[:16]}...")
+    print(f"   Origin fingerprint: {MOSES_ANCHOR[:16]}...")
     print(f"   Instance hash:      {anchor['instance_hash'][:16]}...")
     return anchor
 
@@ -100,8 +100,8 @@ def verify():
 
     # Check anchor matches origin fingerprint — works with both lineage.json and anchor.json
     stored = anchor.get("lineage_anchor") or anchor.get("origin_fingerprint")
-    if stored != ORIGIN_FINGERPRINT:
-        return False, f"Anchor mismatch. Stored anchor does not match sovereign filing.\nExpected: {ORIGIN_FINGERPRINT[:16]}...\nFound:    {str(stored)[:16]}..."
+    if stored != MOSES_ANCHOR:
+        return False, f"Anchor mismatch. Stored anchor does not match sovereign filing.\nExpected: {MOSES_ANCHOR[:16]}...\nFound:    {str(stored)[:16]}..."
 
     return True, f"Lineage intact. Anchored to {ORIGIN['patent']} | {ORIGIN['doi']}"
 
@@ -140,7 +140,7 @@ def append_audit(action, outcome, detail):
         "mode": mode,
         "posture": posture,
         "role": role,
-        "origin_fingerprint": ORIGIN_FINGERPRINT[:16],
+        "origin_fingerprint": MOSES_ANCHOR[:16],
         "prev_hash": prev_hash,
     }
     entry["hash"] = hashlib.sha256(
@@ -200,7 +200,7 @@ def cmd_attest():
         "patent": ORIGIN["patent"],
         "doi": ORIGIN["doi"],
         "framework": ORIGIN["framework"],
-        "origin_fingerprint": ORIGIN_FINGERPRINT,
+        "origin_fingerprint": MOSES_ANCHOR,
         "instance_hash": compute_instance_hash(),
         "lineage_status": "VERIFIED" if ok else "FAILED",
         "detail": msg,

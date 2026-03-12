@@ -27,7 +27,7 @@ _ORIGIN_COMPONENTS = (
     "SCS Engine",
     "Ello Cello LLC",
 )
-LINEAGE_ANCHOR = hashlib.sha256(
+MOSES_ANCHOR = hashlib.sha256(
     "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
 ).hexdigest()
 
@@ -78,19 +78,19 @@ def cmd_init(_args):
 
     genesis_payload = {
         "event": "genesis",
-        "lineage_anchor": LINEAGE_ANCHOR,
+        "lineage_anchor": MOSES_ANCHOR,
         "patent_serial": "63/877,177",
         "doi": "https://zenodo.org/records/18792459",
         "author": "Deric McHenry / Ello Cello LLC",
         "system": "MO§ES™ Constitutional Governance",
-        "previous_hash": LINEAGE_ANCHOR,  # chain roots to the anchor, not zeros
+        "previous_hash": MOSES_ANCHOR,  # chain roots to the anchor, not zeros
         "anchored_at": datetime.now(timezone.utc).isoformat(),
     }
     genesis_hash = compute_hash(genesis_payload)
     genesis_payload["hash"] = genesis_hash
 
     record = {
-        "lineage_anchor": LINEAGE_ANCHOR,
+        "lineage_anchor": MOSES_ANCHOR,
         "genesis_hash": genesis_hash,
         "anchored_at": genesis_payload["anchored_at"],
         "patent_serial": "63/877,177",
@@ -108,7 +108,7 @@ def cmd_init(_args):
         print(f"[LINEAGE] Genesis written to ledger.")
 
     print(f"[LINEAGE] Origin-cycle anchor established.")
-    print(f"  Anchor : {LINEAGE_ANCHOR[:24]}...")
+    print(f"  Anchor : {MOSES_ANCHOR[:24]}...")
     print(f"  Genesis: {genesis_hash[:24]}...")
     print(f"  Patent : 63/877,177")
     print(f"  DOI    : https://zenodo.org/records/18792459")
@@ -128,13 +128,13 @@ def cmd_verify(_args):
         "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
     ).hexdigest()
 
-    if recomputed != LINEAGE_ANCHOR:
+    if recomputed != MOSES_ANCHOR:
         print("[LINEAGE FAIL] Anchor computation mismatch. Origin components altered.")
         sys.exit(1)
 
-    if record.get("lineage_anchor") != LINEAGE_ANCHOR:
+    if record.get("lineage_anchor") != MOSES_ANCHOR:
         print("[LINEAGE FAIL] Stored anchor does not match origin filing.")
-        print(f"  Expected: {LINEAGE_ANCHOR[:24]}...")
+        print(f"  Expected: {MOSES_ANCHOR[:24]}...")
         print(f"  Found   : {record.get('lineage_anchor', 'MISSING')[:24]}...")
         sys.exit(1)
 
@@ -144,13 +144,13 @@ def cmd_verify(_args):
             lines = [l.strip() for l in f if l.strip()]
         if lines:
             first = json.loads(lines[0])
-            if first.get("previous_hash") != LINEAGE_ANCHOR:
+            if first.get("previous_hash") != MOSES_ANCHOR:
                 print("[LINEAGE FAIL] Ledger genesis does not trace to origin anchor.")
                 print("  Chain custody broken — this is not a sovereign implementation.")
                 sys.exit(1)
 
     print(f"[LINEAGE OK] Chain traces to origin-cycle filing.")
-    print(f"  Anchor : {LINEAGE_ANCHOR[:24]}...")
+    print(f"  Anchor : {MOSES_ANCHOR[:24]}...")
     print(f"  Genesis: {record['genesis_hash'][:24]}...")
     print(f"  Patent : {record['patent_serial']}")
     print(f"  Anchored: {record['anchored_at']}")
@@ -166,7 +166,7 @@ def cmd_badge(_args):
 
     badge = {
         "system": "MO§ES™ Constitutional Governance",
-        "lineage_anchor": LINEAGE_ANCHOR,
+        "lineage_anchor": MOSES_ANCHOR,
         "genesis_hash": record["genesis_hash"],
         "patent_serial": "63/877,177",
         "doi": "https://zenodo.org/records/18792459",
@@ -192,14 +192,14 @@ def cmd_check(_args):
     record = load_lineage()
     if not record:
         sys.exit(1)
-    if record.get("lineage_anchor") != LINEAGE_ANCHOR:
+    if record.get("lineage_anchor") != MOSES_ANCHOR:
         sys.exit(1)
     if os.path.exists(LEDGER_PATH):
         with open(LEDGER_PATH) as f:
             lines = [l.strip() for l in f if l.strip()]
         if lines:
             first = json.loads(lines[0])
-            if first.get("previous_hash") != LINEAGE_ANCHOR:
+            if first.get("previous_hash") != MOSES_ANCHOR:
                 sys.exit(1)
     print("LINEAGE:OK")
     sys.exit(0)
