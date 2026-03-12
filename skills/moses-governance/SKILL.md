@@ -15,8 +15,6 @@ metadata:
       - ~/.openclaw/governance
       - ~/.openclaw/audits/moses
 requires:
-  env:
-    - MOSES_OPERATOR_SECRET
   bins:
     - python3
   stateDirs:
