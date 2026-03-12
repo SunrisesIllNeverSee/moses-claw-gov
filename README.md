@@ -114,7 +114,11 @@ python3 skills/moses-governance/scripts/init_state.py init
 
 ## About MO§ES™
 
-MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional framework for AI agent governance developed by Deric McHenry at Ello Cello LLC. Theoretical foundations published as *"A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application"* (McHenry, Zenodo, 2026). Provisional patent Serial No. 63/877,177.
+MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional framework for AI agent governance developed by Deric McHenry at Ello Cello LLC.
+
+Its theoretical foundation is the **McHenry Conservation Law of Commitment** — the principle that commitment in language is conserved under compression and recursive application. No semantic drift. No scope creep. No contradiction without explicit release. Published as *"A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application"* (McHenry, Zenodo, 2026).
+
+That law is now operational. `moses-governance` enforces it at the session layer. `Lineage Clause by MO§ES™` anchors it cryptographically to the origin filing — so every sovereign implementation carries provable custody, not just policy. Provisional patent Serial No. 63/877,177.
 
 [contact@burnmydays.com](mailto:contact@burnmydays.com) · [mos2es.io](https://mos2es.io) · [GitHub](https://github.com/SunrisesIllNeverSee/moses-claw-gov)
 
