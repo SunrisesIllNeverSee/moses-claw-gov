@@ -8,6 +8,7 @@ Usage:
 """
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -42,7 +43,7 @@ def get_previous_hash():
 
 
 def compute_hash(entry: dict) -> str:
-    content = json.dumps(entry, sort_keys=True)
+    content = json.dumps(entry, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
     return hashlib.sha256(content.encode()).hexdigest()
 
 
@@ -61,12 +62,16 @@ def cmd_log(args):
         "mode": state.get("mode", "unknown"),
         "posture": state.get("posture", "unknown"),
         "role": state.get("role", "unknown"),
+        "session_hash": state.get("session_hash"),
         "previous_hash": previous_hash,
     }
     entry["hash"] = compute_hash({k: v for k, v in entry.items() if k != "hash"})
 
     with open(LEDGER_PATH, "a") as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
         f.write(json.dumps(entry) + "\n")
+        f.flush()
+        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
     print(f"[AUDIT] Entry logged. Hash: {entry['hash'][:16]}...")
     return entry["hash"]

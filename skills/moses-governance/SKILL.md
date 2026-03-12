@@ -1,5 +1,6 @@
 ---
 name: moses-governance
+license: MIT
 description: MO§ES™ Constitutional Governance – Multi-agent framework enforcing McHenry Conservation Law commitment preservation, mode/posture/role constraints, sequence (Primary → Secondary → Observer), and tamper-evident audit trail. Provisional Patent Serial No. 63/877,177. DOI: https://zenodo.org/records/18792459.
 metadata:
   openclaw:
@@ -34,6 +35,7 @@ Core principles:
 
 ## Mandatory Pre-Action Workflow (Invoke in This Order)
 
+0. Call `moses_lineage_check` → confirm chain traces to origin-cycle anchor. **If lineage fails, halt immediately. No further steps.** A non-sovereign instance cannot govern.
 1. Call `moses_get_status` → load current mode, posture, role, vault.
 2. Call `moses_check_governance` with proposed action description → block if prohibited.
 3. If permitted, execute.
@@ -110,13 +112,15 @@ State updates via: `python3 scripts/init_state.py set --mode <mode> --posture <p
 
 ```
 scripts/
-  audit_stub.py     ← SHA-256 chained ledger (log / verify / recent)
-  init_state.py     ← Governance state manager (init / set / get / reset)
+  audit_stub.py      ← SHA-256 chained ledger (log / verify / recent)
+  init_state.py      ← Governance state manager (init / set / get / reset)
+  lineage_verify.py  ← Lineage Custody verifier (verify / status / attest / init-anchor)
 references/
-  modes.md          ← Full mode definitions and constraints
-  postures.md       ← SCOUT/DEFENSE/OFFENSE specs
-  roles.md          ← Primary/Secondary/Observer behavior specs
-AMENDMENT-FORMAT.md ← Constitutional amendment schema + approval flow
+  modes.md           ← Full mode definitions and constraints
+  postures.md        ← SCOUT/DEFENSE/OFFENSE specs
+  roles.md           ← Primary/Secondary/Observer behavior specs
+AMENDMENT-FORMAT.md  ← Constitutional amendment schema + approval flow
+LINEAGE.md           ← Lineage Custody Clause — travels with all derivative embodiments
 ```
 
 ---
