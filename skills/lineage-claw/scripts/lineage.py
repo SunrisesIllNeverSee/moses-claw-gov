@@ -24,8 +24,8 @@ _ORIGIN_COMPONENTS = (
     "MO§ES™",
     "Serial:63/877,177",
     "DOI:https://zenodo.org/records/18792459",
+    "SCS Engine",
     "Ello Cello LLC",
-    "McHenry Conservation Law",
 )
 LINEAGE_ANCHOR = hashlib.sha256(
     "|".join(_ORIGIN_COMPONENTS).encode("utf-8")

@@ -26,8 +26,8 @@ _ORIGIN_COMPONENTS = (
     "MO§ES™",
     "Serial:63/877,177",
     "DOI:https://zenodo.org/records/18792459",
+    "SCS Engine",
     "Ello Cello LLC",
-    "McHenry Conservation Law",
 )
 ORIGIN = {
     "sovereign": "Deric McHenry",

@@ -1,5 +1,5 @@
 ---
-name: moses-lineage
+name: lineage-claw
 license: MIT
 description: MO§ES™ Lineage Custody — cryptographic origin-cycle verification. Every sovereign implementation traces its audit chain to the originating filing (Patent Serial No. 63/877,177, DOI https://zenodo.org/records/18792459). Chains without the anchor cannot verify. Copies without lineage collapse.
 metadata:
