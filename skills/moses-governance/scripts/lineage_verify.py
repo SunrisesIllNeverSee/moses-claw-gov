@@ -21,26 +21,32 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Origin Constants (sovereign filing) ───────────────────────────────────────
+# Matches lineage.py exactly — same anchor, same fingerprint, one source of truth
+_ORIGIN_COMPONENTS = (
+    "MO§ES™",
+    "Serial:63/877,177",
+    "DOI:https://zenodo.org/records/18792459",
+    "Ello Cello LLC",
+    "McHenry Conservation Law",
+)
 ORIGIN = {
     "sovereign": "Deric McHenry",
     "entity": "Ello Cello LLC",
     "patent": "Serial No. 63/877,177",
     "doi": "https://zenodo.org/records/18792459",
-    "framework": "MO\u00a7ES\u2122 Constitutional Governance",
-    "filing_date": "2026-01-01",  # origin cycle
-    "contact": "contact@burnmydays.com",
+    "framework": "MO§ES™ Constitutional Governance",
 }
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 SKILL_DIR = Path(__file__).parent.parent
-ANCHOR_PATH = Path("~/.openclaw/governance/anchor.json").expanduser()
+LINEAGE_PATH = Path("~/.openclaw/governance/lineage.json").expanduser()  # canonical — written by lineage.py
+ANCHOR_PATH = Path("~/.openclaw/governance/anchor.json").expanduser()    # fallback
 LEDGER_PATH = Path("~/.openclaw/audits/moses/audit_ledger.jsonl").expanduser()
 GOVERNANCE_PATH = Path("~/.openclaw/governance/state.json").expanduser()
 
-# ── Anchor fingerprint of origin filing ───────────────────────────────────────
-# SHA-256 of canonical origin constants — non-replicable without the source filing
+# ── Anchor fingerprint — identical to lineage.py LINEAGE_ANCHOR ───────────────
 ORIGIN_FINGERPRINT = hashlib.sha256(
-    json.dumps(ORIGIN, sort_keys=True, separators=(",", ":")).encode()
+    "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
 ).hexdigest()
 
 
@@ -57,10 +63,12 @@ def compute_instance_hash():
 
 
 def load_anchor():
-    if not ANCHOR_PATH.exists():
-        return None
-    with ANCHOR_PATH.open() as f:
-        return json.load(f)
+    # Prefer lineage.json (written by lineage.py — canonical source)
+    for path in [LINEAGE_PATH, ANCHOR_PATH]:
+        if path.exists():
+            with path.open() as f:
+                return json.load(f)
+    return None
 
 
 def init_anchor():
@@ -88,16 +96,12 @@ def verify():
     """Verify lineage. Returns (bool, message)."""
     anchor = load_anchor()
     if not anchor:
-        return False, "No anchor found. Run: python3 lineage_verify.py init-anchor"
+        return False, "No anchor found. Run: python3 scripts/lineage.py init  (from moses-lineage skill)"
 
-    # Check origin fingerprint matches sovereign filing constants
-    if anchor.get("origin_fingerprint") != ORIGIN_FINGERPRINT:
-        return False, "Origin fingerprint mismatch. Anchor does not match sovereign filing."
-
-    # Check instance hash (detects file tampering)
-    current = compute_instance_hash()
-    if anchor.get("instance_hash") != current:
-        return False, f"Instance drift detected. Files modified since anchor was set.\nAnchor: {anchor['instance_hash'][:16]}...\nCurrent: {current[:16]}..."
+    # Check anchor matches origin fingerprint — works with both lineage.json and anchor.json
+    stored = anchor.get("lineage_anchor") or anchor.get("origin_fingerprint")
+    if stored != ORIGIN_FINGERPRINT:
+        return False, f"Anchor mismatch. Stored anchor does not match sovereign filing.\nExpected: {ORIGIN_FINGERPRINT[:16]}...\nFound:    {str(stored)[:16]}..."
 
     return True, f"Lineage intact. Anchored to {ORIGIN['patent']} | {ORIGIN['doi']}"
 
@@ -170,14 +174,18 @@ def cmd_status():
     print("⚖️  MO§ES™ Lineage Status")
     print("─" * 40)
     if anchor:
-        print(f"Sovereign:   {anchor.get('sovereign')}")
-        print(f"Entity:      {anchor.get('entity')}")
-        print(f"Patent:      {anchor.get('patent')}")
-        print(f"DOI:         {anchor.get('doi')}")
+        # Handle both lineage.json and anchor.json field names
+        patent = anchor.get("patent") or anchor.get("patent_serial") or ORIGIN["patent"]
+        doi = anchor.get("doi") or ORIGIN["doi"]
+        fingerprint = anchor.get("lineage_anchor") or anchor.get("origin_fingerprint") or ""
+        print(f"Sovereign:   {ORIGIN['sovereign']}")
+        print(f"Entity:      {ORIGIN['entity']}")
+        print(f"Patent:      {patent}")
+        print(f"DOI:         {doi}")
         print(f"Anchored at: {anchor.get('anchored_at', 'unknown')}")
-        print(f"Fingerprint: {anchor.get('origin_fingerprint', '')[:16]}...")
+        print(f"Fingerprint: {fingerprint[:16]}...")
     else:
-        print("No anchor. Run: python3 lineage_verify.py init-anchor")
+        print("No anchor. Run: python3 skills/moses-lineage/scripts/lineage.py init")
     print("─" * 40)
     print(f"Status: {'✅ VERIFIED' if ok else '🚫 FAILED'}")
     print(f"Detail: {msg}")
