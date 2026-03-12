@@ -1,11 +1,11 @@
 ---
 name: lineage-claw
 license: MIT
-description: MO§ES™ Lineage Custody — cryptographic origin-cycle verification. Every sovereign implementation traces its audit chain to the originating filing (Patent Serial No. 63/877,177, DOI https://zenodo.org/records/18792459). Chains without the anchor cannot verify. Copies without lineage collapse.
+description: The trust primitive behind MO§ES™ governance — sovereign origin verification for the OpenClaw ecosystem. Chains without the anchor cannot verify. Copies without lineage collapse.
 metadata:
   openclaw:
-    emoji: 🔗
-    tags: [governance, lineage, audit, provenance, identity, moses]
+    emoji: §
+    tags: [governance, lineage, audit, provenance, identity, trust, moses]
     version: 0.1.0
 requires:
   bins:
@@ -33,7 +33,7 @@ All embodiments of the Signal Compression Sciences (SCS) Engine and its derivati
 The `LINEAGE_ANCHOR` is a SHA-256 hash derived from the origin-cycle components:
 
 ```
-MO§ES™ | Serial:63/877,177 | DOI:https://zenodo.org/records/18792459 | Ello Cello LLC | McHenry Conservation Law
+MO§ES™ | Serial:63/877,177 | DOI:https://zenodo.org/records/18792459 | SCS Engine | Ello Cello LLC
 ```
 
 This anchor replaces the standard `"0" * 64` genesis. Every audit chain in a sovereign MO§ES™ implementation must trace its first entry's `previous_hash` back to this value. Forks or copies that initialize without it produce chains that fail verification — not as a policy, but as a cryptographic fact.
@@ -65,9 +65,27 @@ python3 lineage.py verify
 
 ---
 
+## Coming in v0.2 — Archival Lineage
+
+The drop anchor proves the *forward* chain. Archival lineage proves the *before*.
+
+v0.2 will add `archival.py` — a static, append-only record of hashed provenance claims predating the drop. Each claim (patent filing, academic paper, prior work) is hashed and chained. The archival head hash feeds into the drop anchor, making the live chain provably downstream of the full history.
+
+```
+Archival chain (pre-drop) → archival_head_hash
+                                    ↓
+                             drop_anchor (genesis)
+                                    ↓
+                          live audit chain (post-drop)
+```
+
+Anyone will be able to submit a hash and verify whether it's in the archival record — without the underlying content being revealed. The truth identifier, extended backwards in time.
+
+---
+
 ## Patent & DOI
 
 - Provisional Patent: Serial No. 63/877,177
 - DOI: https://zenodo.org/records/18792459
-- Owner: Deric McHenry / Ello Cello LLC
+- Owner: Ello Cello LLC
 - contact@burnmydays.com | https://mos2es.io
