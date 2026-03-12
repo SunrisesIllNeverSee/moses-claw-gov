@@ -96,7 +96,7 @@ def verify():
     """Verify lineage. Returns (bool, message)."""
     anchor = load_anchor()
     if not anchor:
-        return False, "No anchor found. Run: python3 scripts/lineage.py init  (from moses-lineage skill)"
+        return False, "No anchor found. Run: python3 scripts/lineage_verify.py init-anchor"
 
     # Check anchor matches origin fingerprint — works with both lineage.json and anchor.json
     stored = anchor.get("lineage_anchor") or anchor.get("origin_fingerprint")
@@ -185,7 +185,7 @@ def cmd_status():
         print(f"Anchored at: {anchor.get('anchored_at', 'unknown')}")
         print(f"Fingerprint: {fingerprint[:16]}...")
     else:
-        print("No anchor. Run: python3 skills/moses-lineage/scripts/lineage.py init")
+        print("No anchor. Run: python3 scripts/lineage_verify.py init-anchor")
     print("─" * 40)
     print(f"Status: {'✅ VERIFIED' if ok else '🚫 FAILED'}")
     print(f"Detail: {msg}")

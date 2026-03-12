@@ -6,24 +6,22 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, multi-agent, audit, constitution, safety]
-    version: 0.1.1
-    env:
-      - MOSES_OPERATOR_SECRET
+    version: 0.1.2
     bins:
       - python3
     stateDirs:
       - ~/.openclaw/governance
       - ~/.openclaw/audits/moses
 requires:
-  env:
-    - MOSES_OPERATOR_SECRET
   bins:
     - python3
   stateDirs:
     - ~/.openclaw/governance
     - ~/.openclaw/audits/moses
 example: |
-  export MOSES_OPERATOR_SECRET='your-secure-hmac-key'
+  python3 scripts/lineage_verify.py init-anchor
+  python3 scripts/init_state.py init
+  python3 scripts/audit_stub.py recent
 ---
 
 # MO§ES™ Governance – Mandatory Multi-Agent Constitutional Layer
@@ -84,19 +82,26 @@ If out-of-sequence: Block response, log violation, notify operator.
 ## Vault & Amendment Rules
 
 - Loaded vault documents apply as additional constraints.
-- Amendments: Propose only on audit-detected drift/inefficiency. Format must include diff, justification, HMAC signature requirement.
+- Amendments: Propose only on audit-detected drift/inefficiency. Format must include diff, justification, and HMAC signature.
 - See `AMENDMENT-FORMAT.md` for full schema and approval flow.
+
+**Operator Note — MOSES_OPERATOR_SECRET:** This key is operator-held for manual HMAC signing of amendment approvals. It is not injected into agent sessions and not read by any bundled script. Keep it offline. Never paste it into chat or provide it to an agent. The signing workflow is: `echo -n "<amendment_id>" | openssl dgst -sha256 -hmac "$MOSES_OPERATOR_SECRET"`
 
 ---
 
 ## Tools You MUST Use
 
-- `moses_get_status` — load governance state before every action
-- `moses_check_governance` — check action against mode/posture/role
-- `moses_audit_log` — append to chain before final output
-- `moses_audit_verify` — verify chain integrity on demand
+When running under an MCP server, call these tools by name:
 
-Failure to use them when required is logged as a violation.
+| MCP Tool | CLI Equivalent |
+|---|---|
+| `moses_lineage_check` | `python3 scripts/lineage_verify.py verify` |
+| `moses_get_status` | `python3 scripts/init_state.py get` |
+| `moses_check_governance` | *(mode/posture logic in init_state.py + audit_stub.py)* |
+| `moses_audit_log` | `python3 scripts/audit_stub.py log <agent> <action> <detail> <outcome> <mode> <posture> <role>` |
+| `moses_audit_verify` | `python3 scripts/audit_stub.py verify` |
+
+Without an MCP server, invoke the CLI equivalents directly. Failure to complete the workflow is a constitutional violation — log it and halt.
 
 ---
 
