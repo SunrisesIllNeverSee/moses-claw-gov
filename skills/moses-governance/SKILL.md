@@ -6,7 +6,14 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, multi-agent, audit, constitution, safety]
-    version: 0.1.0
+    version: 0.1.1
+    env:
+      - MOSES_OPERATOR_SECRET
+    bins:
+      - python3
+    stateDirs:
+      - ~/.openclaw/governance
+      - ~/.openclaw/audits/moses
 requires:
   env:
     - MOSES_OPERATOR_SECRET
