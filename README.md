@@ -304,6 +304,8 @@ MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a
 
 At its deepest level, MO§ES™ is a formalization of a conservation law: commitment — the irreducible meaning in a signal — is preserved under compression when enforcement is active, and lost when it isn't. This extends Shannon's information theory (1948) into the semantic domain that Shannon deliberately scoped out.
 
+The algebraic substrate this draws from: ABBA (Centelles & Mendelsohn, Imperial College London, 2026) establishes that commutators in quaternion algebras compress 4n → 3n traceless matrices under lattice-hard invariants. MO§ES™ extends these algebraic compression properties into the semantic domain — commitment tokens as the invariant subspace, Jaccard kernel extraction as the compression measure, and governance enforcement as the lattice constraint that makes conservation hold. ABBA is the engine. MO§ES™ is the constitution.
+
 The **Commitment Conservation Law** and its Three Laws are now operational. `moses-governance` enforces them at the session layer. `Lineage Clause by MO§ES™` anchors the origin cryptographically — so every sovereign implementation carries provable custody, not just policy. Published as *"A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application"* (Zenodo, 2026). Provisional patent Serial No. 63/877,177.
 
 **What this means:**
