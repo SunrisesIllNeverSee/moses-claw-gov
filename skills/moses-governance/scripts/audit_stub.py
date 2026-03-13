@@ -74,6 +74,22 @@ def cmd_log(args):
         fcntl.flock(f.fileno(), fcntl.LOCK_UN)
 
     print(f"[AUDIT] Entry logged. Hash: {entry['hash'][:16]}...")
+
+    # Flag recovery needed in progress tracker if outcome is a failure
+    outcome = (args.outcome or "").upper()
+    if any(x in outcome for x in ("FAIL", "BLOCK", "DECLINE", "ERROR")):
+        progress_path = os.path.expanduser("~/.openclaw/governance/progress.json")
+        if os.path.exists(progress_path):
+            try:
+                with open(progress_path) as pf:
+                    progress = json.load(pf)
+                progress["recovery_needed"] = True
+                progress["recovery_flagged_at"] = entry["timestamp"]
+                with open(progress_path, "w") as pf:
+                    json.dump(progress, pf, indent=2)
+            except Exception:
+                pass
+
     return entry["hash"]
 
 
