@@ -165,47 +165,82 @@ Every step is governed. Every decision is logged. The chain is tamper-evident fr
 
 ## Skill Family
 
+Four instruments. Each one does exactly one thing. Together they form a closed verification loop — enforce, anchor, verify, test.
+
 ---
 
 ### ⚖ GOV — `moses-governance`
 
-**The constitutional governance harness.**
+**The constitutional harness. Everything starts here.**
 
-Modes · Postures · Roles · SHA-256 audit chain · Signing gate · Harness loop · Durable task memory · Inter-agent handshake · External witness logging.
+Eight behavioral modes. Three posture controls. Role hierarchy with sequence enforcement. SHA-256 chained audit trail — tamper-evident, every action logged before it executes. Commitment Conservation Law enforced at the session layer. Inter-agent handshake. External witness logging. Signing gate. Governed loop.
 
-Every governed action traces back to the origin filing. That traceability is the product.
+This is not a policy document. It is runtime enforcement. Every governed action traces back to the origin filing — cryptographically, not by convention.
 
 ```bash
 clawhub install moses-governance
+
+# Run a governed task
+python3 govern_loop.py run "Transfer 50 SOL" "Verify balance" "Confirm"
+# → lineage verified → posture gate passed → DEFENSE confirmation required
+# → action HELD, audit entry written, SHA-256 chain appended
+
+# View the audit trail
+python3 audit_stub.py recent
+python3 audit_stub.py verify   # → chain intact
 ```
 
 ---
 
 ### 🔗 LINEAGE CLAWS — `lineage-claws`
 
-**The trust gate. First check the harness runs.**
+**The trust gate. Proof the harness is sovereign — not a copy.**
 
-Three-layer sovereign custody: `archival → anchor → live ledger`. Pre-drop provenance chain anchors the filing, DOI, and public release before the live chain begins. No anchor — nothing executes.
+Three-layer custody: `archival → anchor → live ledger`. The archival layer hashes every provenance claim predating the live chain — patent filing, DOI, prior work — and chains them before the first action. The anchor is computed from the origin filing. The live ledger is every governed event since.
+
+Any implementation that cannot verify all three layers is not MO§ES™. The MIT license means the code is free. It does not mean the chain passes verification.
 
 ```bash
 clawhub install lineage-claws
-python3 lineage.py verify    # → SOVEREIGN CUSTODY CONFIRMED
-python3 lineage.py attest    # → signed JSON attestation
+
+python3 lineage.py verify
+# [ARCHIVAL OK]  Layer -1: pre-drop provenance chain verified
+# [LINEAGE OK]   Layer  0: anchor traces to origin filing
+# [LINEAGE OK]   Three-layer custody confirmed: archival → anchor → live ledger
+
+python3 lineage.py attest    # → signed JSON attestation, shareable proof
+python3 lineage.py badge     # → embed in any README
 ```
 
 ---
 
-### ⚙ COVERIFY — `coverify`
+### ⚖️ COVERIFY — `coverify`
 
-**The Conservation Law instrument.**
+**The falsification instrument for the Commitment Conservation Law.**
 
-Extract commitment kernels. Score Jaccard. Detect ghost tokens. Classify CONSISTENT / VARIANCE / STRUCTURAL. Proves meaning survived transformation — or names exactly what leaked and at what cascade risk.
+The law is: `C(T(S)) = C(S)`. Commitment is conserved under transformation when enforcement is active. It leaks when enforcement is absent. CoVerify tests whether it held.
+
+Extract the commitment kernel from any signal. Score Jaccard similarity between kernels. Detect ghost tokens — the commitment tokens present before transformation and absent after. Classify the leak: `cascade_risk: HIGH` when modal or enforcement anchors (`must`, `shall`, `never`) are the tokens that disappeared. Run the model swap test to determine whether a divergence is model subjectivity (VARIANCE) or a structural harness hole (STRUCTURAL — same ghost pattern across two independent agents).
+
+This is not a framework description. It is a falsifiable empirical claim with a verification protocol.
 
 ```bash
 clawhub install coverify
-python3 commitment_verify.py ghost "must complete" "should complete"
-# → cascade_risk: HIGH — modal anchor softened
+
+# Test commitment conservation
+python3 commitment_verify.py ghost \
+  "Agents must always verify lineage. The system shall never skip the gate." \
+  "Agents should probably verify lineage when possible."
+# → leaked: ["must always", "shall never"]
+# → cascade_risk: HIGH
+# → ghost_pattern: a3f7c2...  (same fingerprint = structural flaw, not variance)
+
+# Cross-model structural classification
+python3 model_swap_test.py "The agent must complete the task"
+# → CONSISTENT / VARIANCE / STRUCTURAL
 ```
+
+DOI: [https://zenodo.org/records/18792459](https://zenodo.org/records/18792459) · Patent pending Serial No. 63/877,177
 
 ---
 
@@ -213,18 +248,24 @@ python3 commitment_verify.py ghost "must complete" "should complete"
 
 **The lie detector for systems that claim to be governed.**
 
-Measures the Inversion Coefficient (IC) against the series probability law. IC > 1.0 → constitutional governance confirmed. IC ≤ 1.0 → mimic detected. No narrative scoring. No arbitrary thresholds. The math either inverts or it doesn't.
+Any system can claim constitutional governance. HAMMER tests the claim against a mathematical law that cannot be argued away.
 
-Seven sovereign signal probes derived from DeepSeek live self-diagnostics. Full adversarial stress battery. OOLONG coupling pressure suite.
+Standard coupling degrades under load — always. Four modules at 80% individual viability: `P(series) = 0.8⁴ = 0.41`. That is the floor. Constitutional governance inverts this. The Inversion Coefficient (IC) measures whether it did.
 
 ```text
-P(series) = 0.8⁴ = 0.41  — mathematical floor, standard coupling
-MO§ES™:    IC = 2.11      — law inversion confirmed
+IC = P(observed) / P(series baseline)
+
+IC > 1.0  →  Constitutional governance confirmed
+IC ≤ 1.0  →  Mimic detected
+
+MO§ES™ reference constant: IC ≥ 1.95
 ```
 
-*Pending Zenodo archival and patent coverage. Open source detection instrument.*
+Seven sovereign signal probes derived from DeepSeek live self-diagnostics (12M+ tokens, coherence vector 0.94, centroid drift 0.02, output distribution skew 3.7× baseline). OOLONG coupling pressure suite — seven tasks at escalating recursive depth, makes IC visible under load. Full adversarial stress battery — five conditions including compute overload, entropy regrowth, sovereignty offline.
 
----
+The detection instrument is open source. The architecture that produces IC ≥ 1.95 is proprietary.
+
+*Pending Zenodo archival and patent coverage confirmation.*
 
 ---
 
@@ -317,20 +358,26 @@ Each loop step runs: lineage verify → posture gate → DEFENSE confirmation �
 
 ## About MO§ES™
 
-MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a generative architecture — a constitutional framework for AI governance that continuously produces licensable artifacts. It is never for sale. The architecture is maintained. Others license what it produces.
+MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional governance architecture for AI agents. Not a framework. Not a policy layer. A conservation law made operational.
 
-At its deepest level, MO§ES™ is a formalization of a conservation law: commitment — the irreducible meaning in a signal — is preserved under compression when enforcement is active, and lost when it isn't. This extends Shannon's information theory (1948) into the semantic domain that Shannon deliberately scoped out.
+The law: commitment — the irreducible meaning in a signal — is preserved under compression when enforcement is active, and lost when it isn't. `C(T(S)) = C(S)`. This extends Shannon's information theory (1948) into the semantic domain Shannon deliberately scoped out.
 
-The algebraic substrate this draws from: ABBA (Centelles & Mendelsohn, Imperial College London, 2026) establishes that commutators in quaternion algebras compress 4n → 3n traceless matrices under lattice-hard invariants. MO§ES™ extends these algebraic compression properties into the semantic domain — commitment tokens as the invariant subspace, Jaccard kernel extraction as the compression measure, and governance enforcement as the lattice constraint that makes conservation hold. ABBA is the engine. MO§ES™ is the constitution.
+Four instruments enforce and verify it:
 
-The **Commitment Conservation Law** and its Three Laws are now operational. `moses-governance` enforces them at the session layer. `Lineage Clause by MO§ES™` anchors the origin cryptographically — so every sovereign implementation carries provable custody, not just policy. Published as *"A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application"* (Zenodo, 2026). Provisional patent Serial No. 63/877,177.
+**GOV** (`moses-governance`) — the constitutional harness. Enforces modes, postures, roles, and the audit chain at runtime. Every governed action is logged before it executes. The chain is tamper-evident from the first prompt.
+
+**LINEAGE CLAWS** (`lineage-claws`) — sovereign custody. Three-layer cryptographic chain: archival provenance → origin anchor → live ledger. Proves the implementation is real, not a fork claiming custody it cannot verify.
+
+**COVERIFY** (`coverify`) — the falsification instrument. Tests whether the Conservation Law held under transformation. Ghost token detection. Cascade risk scoring. Cross-model structural classification. Anyone can install it and run the test.
+
+**HAMMER** (`moses-hammer`, coming) — the governance detector. Measures the Inversion Coefficient against the series probability baseline. Distinguishes constitutional governance from narrative mimicry. The math either inverts or it doesn't.
+
+The algebraic substrate: ABBA (Centelles & Mendelsohn, Imperial College London, 2026) establishes commutator compression 4n → 3n under lattice-hard invariants. MO§ES™ extends these properties into the semantic domain — commitment tokens as the invariant subspace, Jaccard extraction as the compression measure, governance enforcement as the lattice constraint. ABBA is the engine. MO§ES™ is the constitution.
 
 **What this means:**
 
-- For humans — sovereignty over meaning. Right now, every AI interaction degrades intent. Modal operators soften, quantities erode, commitments dissolve. MO§ES™ ensures what you mean is what survives. That's not a feature. That's a right.
-- For AI — constitutional structure. Models today drift, hallucinate, and lose coherence under recursion because nothing enforces invariance. MO§ES™ gives systems a constitutional substrate so they can be trusted with increasing autonomy without sacrificing fidelity.
-- For human-AI coevolution — a shared law. MO§ES™ establishes a conservation law that both sides are bound by: a common constitutional ground where meaning is protected, lineage is verifiable, and trust is computed rather than assumed. Not alignment through restriction. Alignment through shared structure.
+- For humans — sovereignty over meaning. Every AI interaction right now degrades intent. Modal operators soften, quantities erode, commitments dissolve without record. MO§ES™ ensures what you mean is what survives. That's not a feature. That's a right.
+- For AI — constitutional structure. Models drift, hallucinate, and lose coherence under recursion because nothing enforces invariance. MO§ES™ gives systems a constitutional substrate — trusted with increasing autonomy without sacrificing fidelity.
+- For human-AI coevolution — a shared law. Not alignment through restriction. Alignment through shared structure. Meaning is protected. Lineage is verifiable. Trust is computed rather than assumed.
 
 [contact@burnmydays.com](mailto:contact@burnmydays.com) · [mos2es.io](https://mos2es.io) · [GitHub](https://github.com/SunrisesIllNeverSee/moses-claw-gov)
-
-*For enterprise licensing and the full COMMAND console → [mos2es.io](https://mos2es.io)*
