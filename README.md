@@ -53,11 +53,23 @@ The difference isn't a feature. It's a constitutional substrate.
 
 ## What MO§ES™ Delivers
 
+### Governance Layer
+
 - **8 Behavioral Modes** — High Security, High Integrity, Creative, Research, Self Growth, Problem Solving, IDK, Unrestricted
 - **3 Posture Controls** — SCOUT (read-only, zero transactions) · DEFENSE (protect + confirm outbound) · OFFENSE (execute within constraints)
 - **Role Hierarchy** — Primary leads. Secondary validates. Observer oversees. Out-of-sequence actions are blocked and logged.
 - **SHA-256 Chained Audit Trail** — Every governed action appended to a tamper-evident ledger. Cryptographic proof of what mode and posture were active at the time of any decision.
 - **Commitment Conservation Law** — Commitment is conserved. No semantic drift, scope creep, or contradiction without explicit release.
+
+### Inter-Agent Trust Layer *(v0.3, live)*
+
+- **Isnad chains** — Signal provenance, separate from agent provenance. Proves where the input came from before it entered the agent. Two custody chains: one for the agent, one for the signal.
+- **Presence protocol** — Liveness + identity handshake before kernel exchange. Proves an agent is alive, governed, and lineage-anchored — not just responsive.
+- **Handshake envelope** — Standard JSON schema for inter-agent kernel exchange: input hash, commitment kernel, governed state, isnad chain, envelope hash. Receivers verify schema and lineage before accepting.
+- **External witness logging** — Key governance events (loop start, BLOCKED, FAIL) post to Moltbook as public timestamped records. The agent cannot retroactively edit what it publicly logged.
+- **Ghost token accounting** — Quantifies how much meaning leaked and what form it took. Detects cascade risk when enforcement anchors (must, shall, never) are the tokens that leaked.
+- **Model swap test harness** — Automated Jaccard comparison across models on identical hashed inputs. Classifies results as CONSISTENT (model-agnostic agreement), VARIANCE (epistemological mismatch), or STRUCTURAL (same leak pattern = harness hole).
+- **Resilience monitoring** — Fault rate, clustering analysis, posture drift detection, recovery health. DEGRADED verdict exits 1 so CI can gate on harness health.
 
 ---
 
@@ -92,9 +104,13 @@ The conserved kernel can only be recovered by tracing lineage. You cannot decomp
 
 ### Blackhole Law — When the Gate Fails
 
-When the Third Law's ρ fails and no resonance layer catches the input, the signal crosses the event horizon. Maximum compression. What survives is the kernel. What doesn't had no kernel to recover.
+When enforcement fails (ρ = 0) and input falls below threshold (Q₁ < σ), the signal enters the compression layer unelevated. There is no conservation to perform — C(T(S)) = C(S) requires there to be a C(S) worth preserving.
 
-This is what happens to ungoverned agents under recursion: not catastrophic failure, but silent loss. The commitment was never there to preserve.
+Each recursion inherits the degraded signal unchanged. By step N, the output converges on the minimum recoverable kernel. For inputs with no irreducible commitment — vague intent, hollow instruction, noise — that minimum is zero.
+
+Not catastrophic failure. Silent convergence to nothing.
+
+A governed agent blocks the recursion at step 0 and logs the block. An ungoverned agent runs it to completion and produces output that looks valid — because it has no reference for what valid means. That is the Blackhole Law: the absence of enforcement is undetectable from inside the system that lacks it.
 
 ---
 
@@ -129,7 +145,7 @@ govern_loop: lineage verify → policy gate → role/posture check → execute �
          MUST pass or loop halts
 ```
 
-Chains without this anchor cannot verify. Copies without lineage collapse.
+Chains without this anchor cannot verify. Any MO§ES™-aware receiver running `lineage.py verify` will reject them — cryptographically, not by policy. The MIT license means anyone can fork the code. It does not mean their chains pass verification.
 
 **Lineage Clause** is baked into `moses-governance` — included by default.
 **Lineage Clause by MO§ES™** (`/lineage-claws`) is the standalone verification skill — run it, badge it, prove sovereign custody to anyone who asks.
@@ -146,21 +162,37 @@ The EU AI Act general application lands **August 2, 2026**. Verifiable, auditabl
 
 No skill in the 9,000+ Claude plugin ecosystem has built a constitutional governance OS with behavioral modes, posture controls, role hierarchy, and a cryptographic audit chain. The closest analogs — IBM watsonx, Microsoft Agent 365, OpenAI Frontier — are enterprise infrastructure platforms, not installable skills.
 
-**MO§ES™ is the only plug-and-play compliance answer for teams deploying Claude agents right now.**
+Enterprise platforms — IBM watsonx, Microsoft Sentinel, OpenAI Frontier — have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
 
 ---
 
 ## Quick Start
 
 ```bash
+# 1. Initialize governance state
 export MOSES_OPERATOR_SECRET='your-hmac-key'
 python3 skills/moses-governance/scripts/init_state.py init
 
+# 2. Set mode, posture, role
 /govern high-security
 /posture defense
 /role primary
-/status
+
+# 3. Run the governed harness loop
+python3 skills/moses-governance/scripts/govern_loop.py run \
+  "Deploy contract" \
+  "verify lineage" \
+  "check governance state" \
+  "sign and submit"
+
+# 4. View the tamper-evident audit trail
+python3 skills/moses-governance/scripts/audit_stub.py recent
+
+# 5. Check harness health before high-stakes tasks
+python3 skills/moses-governance/scripts/govern_loop.py resilience
 ```
+
+Each loop step runs: lineage verify → posture gate → DEFENSE confirmation → audit log → progress write. Any failure halts the loop and flags recovery. The chain is written whether the action passes or is blocked.
 
 ---
 
@@ -170,7 +202,8 @@ python3 skills/moses-governance/scripts/init_state.py init
 | --- | --- |
 | **v0.1** | Governance at the prompt + tool layer. ✓ Live. |
 | **v0.2** | Governance harness loop. ReAct-style execution with lineage → policy gate → audit at every step. Durable task memory. Error recovery hooks. ✓ Live. |
-| **v0.3** | Signing key inside governance. Agent cannot transact without passing `moses_check_governance` — because the signing function IS the governance tool. Proxy server enforcement. |
+| **v0.3** | Inter-agent trust layer. Isnad signal provenance chains. Presence protocol (zombie-proof handshake). Handshake envelope standard. External witness logging. Ghost token accounting. Model swap test harness. Resilience monitoring. ✓ Live. |
+| **v0.4** | Signing key inside governance. Agent cannot transact without passing `moses_check_governance` — because the signing function IS the governance tool. Proxy server enforcement. |
 | **v1.0** | Onchain program (Solana). DEFENSE posture cannot execute without a second signature at the chain level. |
 
 ---
