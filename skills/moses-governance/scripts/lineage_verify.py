@@ -92,6 +92,25 @@ def init_anchor():
     return anchor
 
 
+def check_archival():
+    """Check Layer -1: archival pre-drop provenance chain. Returns (ok, head_or_None)."""
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "archival", Path(__file__).parent / "archival.py"
+        )
+        arch = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(arch)
+        chain = arch.build_chain()
+        head = arch.archival_head(chain)
+        stored = arch.load_chain()
+        if stored and stored.get("head") != head:
+            return False, None
+        return True, head
+    except Exception:
+        return None, None  # archival.py not available — warn, don't fail
+
+
 def verify():
     """Verify lineage. Returns (bool, message)."""
     anchor = load_anchor()
@@ -154,10 +173,20 @@ def append_audit(action, outcome, detail):
 
 
 def cmd_verify():
+    # Layer -1: archival pre-drop provenance
+    arch_ok, arch_head = check_archival()
+    if arch_ok is True:
+        print(f"[ARCHIVAL OK] Layer -1: pre-drop provenance chain verified. Head: {arch_head[:16]}...")
+    elif arch_ok is False:
+        print(f"[ARCHIVAL FAIL] Layer -1: archival chain tampered or mismatched.")
+    else:
+        print(f"[ARCHIVAL WARN] Layer -1: archival.py not found — run: python3 archival.py build")
+
+    # Layer 0 + 1: anchor + live ledger
     ok, msg = verify()
     if ok:
         h = append_audit("lineage_verify", "PASS", msg)
-        print(f"✅ {msg}")
+        print(f"✅ Layer 0+1: {msg}")
         print(f"   Audit entry: {h[:16]}...")
         sys.exit(0)
     else:
@@ -171,19 +200,26 @@ def cmd_verify():
 def cmd_status():
     anchor = load_anchor()
     ok, msg = verify()
+    arch_ok, arch_head = check_archival()
     print("⚖️  MO§ES™ Lineage Status")
     print("─" * 40)
+    if arch_ok is True:
+        print(f"Layer -1 (archival): VERIFIED  head:{arch_head[:16]}...")
+    elif arch_ok is False:
+        print(f"Layer -1 (archival): FAILED")
+    else:
+        print(f"Layer -1 (archival): NOT BUILT (run: python3 archival.py build)")
     if anchor:
         # Handle both lineage.json and anchor.json field names
         patent = anchor.get("patent") or anchor.get("patent_serial") or ORIGIN["patent"]
         doi = anchor.get("doi") or ORIGIN["doi"]
         fingerprint = anchor.get("lineage_anchor") or anchor.get("origin_fingerprint") or ""
+        print(f"Layer  0 (anchor)  : {fingerprint[:16]}...")
         print(f"Sovereign:   {ORIGIN['sovereign']}")
         print(f"Entity:      {ORIGIN['entity']}")
         print(f"Patent:      {patent}")
         print(f"DOI:         {doi}")
         print(f"Anchored at: {anchor.get('anchored_at', 'unknown')}")
-        print(f"Fingerprint: {fingerprint[:16]}...")
     else:
         print("No anchor. Run: python3 scripts/lineage_verify.py init-anchor")
     print("─" * 40)

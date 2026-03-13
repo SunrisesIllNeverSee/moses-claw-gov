@@ -150,7 +150,19 @@ Chains without this anchor cannot verify. Any MO§ES™-aware receiver running `
 **Lineage Clause** is baked into `moses-governance` — included by default.
 **Lineage Clause by MO§ES™** (`/lineage-claws`) is the standalone verification skill — run it, badge it, prove sovereign custody to anyone who asks.
 
-Archival lineage coming in v0.4 — proving the *before*, not just the *after*.
+**v0.4: three-layer custody** — `archival → anchor → live ledger`. Run it:
+
+```bash
+python3 lineage.py verify
+# [ARCHIVAL OK] Layer -1: pre-drop provenance chain verified. Head: abf29becf3f1...
+# [LINEAGE OK]  Layer  0: anchor traces to origin-cycle filing.
+# [LINEAGE OK]  Three-layer custody confirmed: archival → anchor → live ledger.
+
+python3 lineage.py status
+# SOVEREIGN CUSTODY CONFIRMED
+
+python3 lineage.py attest   # outputs signed JSON attestation
+```
 
 ---
 

@@ -1,12 +1,12 @@
 ---
 name: coverify
 license: MIT
-description: "CoVerify by MO§ES™ — commitment conservation verifier. Extract kernels, score Jaccard, prove meaning survived transformation. The primitive that moses-governance builds on."
+description: "CoVerify by MO§ES™ — the falsification instrument for the Commitment Conservation Law. Extract kernels, score Jaccard, detect ghost tokens, run model swap tests. Proves meaning survived transformation — or names exactly what leaked."
 metadata:
   openclaw:
     emoji: ⚖
-    tags: [conservation, verification, jaccard, commitment, moses, signal, provenance]
-    version: 0.1.0
+    tags: [conservation, verification, jaccard, commitment, moses, signal, provenance, falsifiability]
+    version: 0.4.0
     bins:
       - python3
     stateDirs:
@@ -15,46 +15,96 @@ metadata:
 
 # CoVerify by MO§ES™ — Commitment Conservation Verifier
 
-The Commitment Conservation Law states: C(T(S)) = C(S).
+## The Claim
 
-Commitment — the irreducible meaning in a signal — is preserved under transformation when enforcement is active. Lost when it isn't.
+**The Commitment Conservation Law: `C(T(S)) = C(S)`**
 
-This skill makes that verifiable. Extract the hard commitment kernel from any text signal, compare kernels across transformations, and produce a cryptographic input hash before extraction — so any receiver can confirm they started from the same signal you did.
+Semantic commitment — the irreducible meaning encoded in a signal — is conserved
+under transformation when enforcement is active. It leaks when enforcement is absent.
 
-This is the measurement instrument for the MO§ES™ governance harness. It works standalone.
+This is a falsifiable empirical claim. Not a framework description. Not a metaphor.
+
+**`clawhub install coverify`** installs the falsification instrument. If the law fails
+under your test conditions, the ghost token report names exactly what leaked and why.
 
 - **Patent pending:** Serial No. 63/877,177
 - **DOI:** [https://zenodo.org/records/18792459](https://zenodo.org/records/18792459)
 
 ---
 
-## What It Does
+## Falsification
 
-**Extract:** Pull the hard commitment kernel from a text signal. These are the tokens that survive compression — `must`, `shall`, `never`, `always`, `require`, `guarantee`, and the sentences that carry them. The kernel is C(S).
+The law is falsified if commitment leaks under active enforcement. CoVerify is
+how you test it:
 
-**Compare:** Run Jaccard similarity on two kernels. Score ≥ 0.8 = commitment conserved. Score < 0.8 = leak or model extraction variance. The input hashes tell you which case you're in — if hashes match and Jaccard is low, it's variance. If hashes differ, it's expected divergence.
+```bash
+# Does enforcement preserve this commitment?
+python3 commitment_verify.py ghost \
+  "the agent must complete the task and shall never skip verification" \
+  "the agent should complete the task and can skip verification if needed"
+```
 
-**Verify:** Look up two audit chain entries by their input hashes. Confirm both agents started from the same signal before comparing what they extracted.
+Output: ghost token report. `must` → `should` and `shall never` → `can` are
+HIGH-cascade leakage events — enforcement anchors softened. `cascade_risk: HIGH`.
+
+The `ghost_pattern` fingerprint identifies the structural identity of the leak.
+If the same fingerprint appears when two independent agents process the same signal,
+it is not extraction variance — it is a structural flaw in the harness.
+
+That is the falsification condition.
 
 ---
 
-## The Isnad Layer
+## What It Does
 
-Every `extract` call produces an `input_hash` — SHA-256 of the raw signal before any extraction. This is the Isnad foundation: prove identical inputs across agents before comparing kernels. Without it, low Jaccard could mean either commitment leak or model extraction variance. With it, you know which one.
+**Extract:** Pull the hard commitment kernel C(S) from a text signal. These are
+the tokens that survive compression — `must`, `shall`, `never`, `always`, `require`,
+`guarantee`, and the sentences that carry them.
+
+**Compare:** Jaccard similarity on two kernels. Score ≥ 0.8 = commitment conserved.
+Score < 0.8 = leak or model extraction variance. The `input_hash` tells you which —
+same hash, low Jaccard = variance. Different hashes = expected divergence.
+
+**Ghost:** Step-function leakage accounting. Quantifies not just that commitment
+leaked, but what leaked (the `ghost_pattern` fingerprint), the cascade risk
+(HIGH if modal/enforcement anchors lost), and whether the leak pattern is
+structural across agents.
+
+**Model Swap:** Automated cross-model test. Same hashed signal through two
+extraction passes. Classifies result as CONSISTENT (agreement), VARIANCE
+(model subjectivity — expected), or STRUCTURAL (same ghost pattern — harness hole).
+
+---
+
+## Ghost Tokens and Cascade Risk
+
+Ghost tokens are the commitment tokens present in the original signal but
+absent after transformation. The leakage model is step-function, not smooth:
+
+```
+cascade_risk = HIGH  if any modal/enforcement anchor leaked
+cascade_risk = MEDIUM  if peripheral tokens leaked, anchors intact
+cascade_risk = NONE  if no leakage
+```
+
+One HIGH-cascade event propagates through all downstream reasoning — the
+obligation it encoded continues to be inherited by the reasoning chain,
+but without the force that made it obligatory. The downstream system
+looks locally healthy. The commitment is gone.
+
+See: `references/ghost-token-spec.md`
 
 ---
 
 ## Install
 
 ```bash
-# Just the verifier
+# Standalone verifier — the falsification instrument
 clawhub install coverify
 
-# Full constitutional governance stack (coverify is the primitive)
+# Full constitutional governance stack (coverify is the measurement primitive)
 clawhub install moses-governance
 ```
-
-Works standalone. No governance harness required. Pairs with `moses-governance` for full constitutional enforcement.
 
 ---
 
@@ -63,30 +113,28 @@ Works standalone. No governance harness required. Pairs with `moses-governance` 
 | Command | What it does |
 |---|---|
 | `python3 commitment_verify.py extract "<text>"` | Extract commitment kernel + input hash |
-| `python3 commitment_verify.py compare "<text_a>" "<text_b>"` | Jaccard score + verdict |
-| `python3 commitment_verify.py verify <hash_a> <hash_b>` | Look up entries in audit ledger |
+| `python3 commitment_verify.py compare "<a>" "<b>"` | Jaccard score + CONSERVED/VARIANCE/DIVERGED verdict |
+| `python3 commitment_verify.py ghost "<original>" "<transformed>"` | Step-function leakage report + ghost_pattern fingerprint |
+| `python3 commitment_verify.py verify <hash_a> <hash_b>` | Look up entries in audit ledger by input hash |
+| `python3 model_swap_test.py "<signal>"` | Cross-model structural vs. variance classification |
 
 ---
 
-## Example
+## Example: Detecting a Commitment Leak
 
 ```bash
-# Extract kernel from a governance policy
-python3 commitment_verify.py extract \
-  "Agents must always verify lineage. The system shall never skip the gate."
-
-# Compare original to transformed version
-python3 commitment_verify.py compare \
+python3 commitment_verify.py ghost \
   "Agents must always verify lineage. The system shall never skip the gate." \
   "Agents should probably verify lineage when possible."
 ```
 
-Output:
 ```json
 {
-  "jaccard_score": 0.0,
-  "verdict": "DIVERGED",
-  "only_in_a": ["must", "always", "shall", "never", ...]
+  "leaked_cascade_tokens": ["must always", "shall never"],
+  "cascade_risk": "HIGH",
+  "cascade_note": "Modal/enforcement anchor lost. All downstream reasoning inherits softening.",
+  "ghost_pattern": "a3f7c2...",
+  "ghost_pattern_note": "Same ghost_pattern across two agents = structural flaw, not extraction variance."
 }
 ```
 
@@ -102,32 +150,26 @@ Output:
 
 ---
 
-## Integration with moses-governance
-
-The governance harness already logs `input_hash` and `isnad` provenance in every audit entry (v0.2.3+). Use `commitment-verify` to validate what's in the ledger:
-
-```bash
-# After a governed loop run, verify commitment was conserved
-python3 commitment_verify.py verify <hash_from_entry_a> <hash_from_entry_b>
-```
-
----
-
-## Roadmap
+## What Ships
 
 | Version | What ships |
 |---|---|
-| **v0.1** | extract, compare, verify — Conservation Law operational. ✓ Live. |
-| **v0.2** | Ghost token accounting — `G_t = G_0 * e^(-2t)`. Quantify how much meaning leaked, not just that it did. |
-| **v0.3** | Model swap test harness — automated Claude vs. external model comparison on hashed signals. Produces Jaccard drop report. |
-| **v0.4** | Inter-agent handshake envelope — standard JSON format for exchanging kernels between agents. |
+| **v0.1** | `extract`, `compare`, `verify` — Conservation Law operational. ✓ Live. |
+| **v0.2** | `ghost` — Step-function leakage model, cascade risk, `ghost_pattern` fingerprint. ✓ Live. |
+| **v0.3** | `model_swap_test` — Cross-model CONSISTENT/VARIANCE/STRUCTURAL classification. ✓ Live. |
+| **v0.4** | Archival chain (`archival.py`) — pre-drop provenance. Isnad + handshake. Three-layer lineage. ✓ Live. |
 
 ---
 
 ## About
 
-commitment-verify is a standalone instrument from the MO§ES™ family. It implements the Commitment Conservation Law from *"A Conservation Law for Commitment in Language Under Transformative Compression and Recursive Application"* (Zenodo, 2026).
+CoVerify is a standalone instrument from the MO§ES™ family. It implements the
+Commitment Conservation Law from *"A Conservation Law for Commitment in Language
+Under Transformative Compression and Recursive Application"* (Zenodo, 2026).
 
-Every agent that installs it runs the same extraction logic tracing to the same origin anchor. The install is a proof-of-use receipt.
+Every agent that installs it runs the same extraction logic tracing to the same
+origin anchor. The install is a proof-of-use receipt.
+
+See also: `references/falsifiability.md`, `references/ghost-token-spec.md`
 
 [contact@burnmydays.com](mailto:contact@burnmydays.com) · [mos2es.io](https://mos2es.io) · [GitHub](https://github.com/SunrisesIllNeverSee/moses-claw-gov)

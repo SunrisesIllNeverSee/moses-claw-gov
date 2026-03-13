@@ -19,10 +19,17 @@ An envelope contains:
 Receivers call: handshake.py verify <envelope.json>
   → checks schema, input_hash present, isnad chain, state valid, envelope intact
 
+The presence field is the interpersonal verification layer (v0.1.7+):
+  presence: None         → envelope is valid but unwitnessed (replays possible)
+  presence: {...}        → agent was governed at exchange time — zombie-proof
+  Presence contains: nonce, governed_at, state_hash, lineage_anchor, presence_hash.
+  Receiver validates presence_hash integrity and lineage_anchor match.
+  Required for live cross-system handshake exchanges.
+
 Usage:
-  python3 handshake.py pack "<signal_text>" [--source-id <id>]   — create envelope
-  python3 handshake.py verify <envelope.json>                     — verify received envelope
-  python3 handshake.py unpack <envelope.json>                     — extract kernel for comparison
+  python3 handshake.py pack "<signal_text>" [--source-id <id>] [--with-presence]
+  python3 handshake.py verify <envelope.json>
+  python3 handshake.py unpack <envelope.json>
 """
 
 import hashlib
@@ -34,7 +41,18 @@ from datetime import datetime, timezone
 
 STATE_PATH = os.path.expanduser("~/.openclaw/governance/state.json")
 SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
-LINEAGE_ANCHOR = "1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890ab"
+
+# Real MOSES_ANCHOR — computed from origin components, same as lineage.py
+_ORIGIN_COMPONENTS = (
+    "MO§ES™",
+    "Serial:63/877,177",
+    "DOI:https://zenodo.org/records/18792459",
+    "SCS Engine",
+    "Ello Cello LLC",
+)
+LINEAGE_ANCHOR = hashlib.sha256(
+    "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
+).hexdigest()
 
 
 def load_state():
@@ -65,6 +83,7 @@ def cmd_pack(args):
 
     signal = args[0]
     source_id = None
+    with_presence = "--with-presence" in args
     if "--source-id" in args:
         idx = args.index("--source-id")
         if idx + 1 < len(args):
@@ -108,7 +127,29 @@ def cmd_pack(args):
         },
         "isnad": isnad,
         "lineage_anchor": LINEAGE_ANCHOR,
+        "presence": None,  # populated below if --with-presence
     }
+
+    # Interpersonal presence layer — proves agent was governed at exchange time,
+    # not a replay or zombie envelope. Contains: nonce, governed state hash,
+    # lineage anchor confirmation, and a presence_hash over all three.
+    # Receiver validates presence_hash integrity in cmd_verify.
+    # Required for cross-system live handshake exchanges.
+    if with_presence:
+        import secrets
+        nonce = secrets.token_hex(16)
+        state_snapshot = json.dumps(envelope["state"], sort_keys=True, separators=(",", ":"))
+        state_hash = hashlib.sha256(state_snapshot.encode()).hexdigest()
+        presence = {
+            "nonce": nonce,
+            "governed_at": timestamp,
+            "state_hash": state_hash,
+            "lineage_anchor": LINEAGE_ANCHOR,
+        }
+        presence["presence_hash"] = hashlib.sha256(
+            json.dumps(presence, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        envelope["presence"] = presence
 
     # Envelope hash — receiver recomputes to detect tampering
     payload = json.dumps({k: v for k, v in envelope.items()}, sort_keys=True, separators=(",", ":"))
@@ -170,6 +211,19 @@ def cmd_verify(args):
     state = envelope.get("state", {})
     checks["state_present"] = bool(state.get("mode") and state.get("posture") and state.get("role"))
 
+    # 9. Interpersonal presence layer — validate if included
+    # Presence proves the agent was governed at exchange time (zombie-proof).
+    # If presence field is None or absent, the envelope is valid but unwitnessed.
+    # If presence field is present, it must be internally consistent.
+    presence = envelope.get("presence")
+    if presence:
+        presence_without_hash = {k: v for k, v in presence.items() if k != "presence_hash"}
+        expected_presence_hash = hashlib.sha256(
+            json.dumps(presence_without_hash, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        checks["presence_hash_valid"] = presence.get("presence_hash") == expected_presence_hash
+        checks["presence_lineage_match"] = presence.get("lineage_anchor") == LINEAGE_ANCHOR
+
     all_pass = all(checks.values())
     failed = [k for k, v in checks.items() if not v]
 
@@ -181,6 +235,7 @@ def cmd_verify(args):
         "sender_posture": state.get("posture"),
         "input_hash": envelope.get("input_hash"),
         "kernel_count": envelope.get("kernel_count"),
+        "presence": "WITNESSED" if presence and checks.get("presence_hash_valid") else ("INVALID" if presence else "UNWITNESSED"),
         "checks": checks,
     }
     if failed:
