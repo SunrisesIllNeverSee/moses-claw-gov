@@ -6,7 +6,7 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.2.4
+    version: 0.3.0
     env:
       - MOSES_OPERATOR_SECRET
     bins:
