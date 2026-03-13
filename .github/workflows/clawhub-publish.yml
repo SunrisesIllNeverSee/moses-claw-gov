@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install ClawHub CLI
-        run: npm install -g clawhub-cli
+        run: npm install -g clawhub
 
       - name: Authenticate
         run: clawhub login --token ${{ secrets.CLAWHUB_TOKEN }}
