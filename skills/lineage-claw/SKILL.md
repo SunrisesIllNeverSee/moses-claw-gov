@@ -1,31 +1,30 @@
 ---
 name: lineage-claw
 license: MIT
-description: Cryptographic origin verification for MO§ES™ implementations. Every sovereign chain traces to the origin filing. Chains without the anchor cannot verify. Copies without lineage collapse. Archival lineage coming in v0.2.
+description: The trust gate for MO§ES™ governance. Cryptographic origin verification — every sovereign chain must trace to the filing anchor or it cannot reconstruct. The Second Law made operational.
 metadata:
   openclaw:
     emoji: §
-    tags: [governance, lineage, audit, provenance, identity, trust, moses]
-    version: 0.1.3
+    tags: [governance, lineage, audit, provenance, identity, trust, moses, harness]
+    version: 0.1.4
     bins:
       - python3
     stateDirs:
       - ~/.openclaw/governance
       - ~/.openclaw/audits/moses
-requires:
-  bins:
-    - python3
-  stateDirs:
-    - ~/.openclaw/governance
-    - ~/.openclaw/audits/moses
-example: |
-  python3 lineage.py init      # anchor genesis to origin filing
-  python3 lineage.py verify    # confirm chain traces to origin
-  python3 lineage.py badge     # output shareable lineage proof
-  python3 lineage.py check     # machine-readable pass/fail
 ---
 
-# MO§ES™ Lineage Custody
+# MO§ES™ Lineage Custody — The Second Law Operational
+
+The MO§ES™ Commitment Conservation Law rests on three laws:
+
+- **Third Law** — The enforcement gate. Establishes whether signal is above threshold before compression.
+- **First Law** — Compression precedes ignition. C(T(S)) = C(S). Commitment is conserved under transformation.
+- **Second Law** — Recursion as reconstruction. The conserved kernel can only be recovered by tracing lineage. You cannot decompress without retracing the path.
+
+**Lineage Custody is the Second Law made operational.** Without a verifiable chain back to the origin filing, reconstruction is impossible. The conserved kernel has no path home.
+
+---
 
 ## Lineage Custody Clause
 
