@@ -6,7 +6,7 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.5.1
+    version: 0.5.2
     depends:
       - coverify
     env:
@@ -77,7 +77,7 @@ If out-of-sequence: Block response, log violation, notify operator.
 - Amendments: Propose only on audit-detected drift/inefficiency. Format must include diff, justification, and HMAC signature.
 - See `AMENDMENT-FORMAT.md` for full schema and approval flow.
 
-**Operator Note — MOSES_OPERATOR_SECRET:** This key is operator-held for manual HMAC signing of amendment approvals. It is not injected into agent sessions and not read by any bundled script. Keep it offline. Never paste it into chat or provide it to an agent. The signing workflow is: `echo -n "<amendment_id>" | openssl dgst -sha256 -hmac "$MOSES_OPERATOR_SECRET"`
+**Operator Note — MOSES_OPERATOR_SECRET:** This key is used by bundled scripts (`audit_stub.py`, `sign_transaction.py`) for HMAC attestation and signing gate enforcement. It is read from the environment only at the moment of attestation or signing — never logged, never transmitted. Treat it as an offline signing key: set it in the operator environment only when running attestation or signing workflows, not as a persistent agent session variable. Never paste it into chat or provide it to an agent prompt. The manual signing workflow is: `echo -n "<amendment_id>" | openssl dgst -sha256 -hmac "$MOSES_OPERATOR_SECRET"`
 
 ---
 
