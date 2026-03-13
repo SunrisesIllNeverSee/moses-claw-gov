@@ -111,7 +111,7 @@ skills/
       govern_loop.py          ← Governance enforcement loop
       witness.py              ← External witness logger (posts to Moltbook)
 
-  lineage-claw/               ← Standalone lineage verification skill (ClawHub)
+  lineage-claws/               ← Standalone lineage verification skill (ClawHub)
     SKILL.md
     scripts/lineage.py        ← MOSES_ANCHOR init/verify/badge/check
     references/LineageCustodyClause.md
@@ -267,7 +267,7 @@ python3 skills/moses-governance/scripts/init_state.py init
 python3 skills/moses-governance/scripts/audit_stub.py log "test" "test action" "pass" "High Security" "DEFENSE" "Primary"
 python3 skills/moses-governance/scripts/audit_stub.py recent
 python3 skills/moses-governance/scripts/audit_stub.py verify
-python3 skills/lineage-claw/scripts/lineage.py verify
+python3 skills/lineage-claws/scripts/lineage.py verify
 ```
 
 All five should exit clean.

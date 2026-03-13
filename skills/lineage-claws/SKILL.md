@@ -1,5 +1,5 @@
 ---
-name: lineage-claw
+name: lineage-claws
 license: MIT
 description: The trust gate for MO§ES™ governance. Cryptographic origin verification — every sovereign chain must trace to the filing anchor or it cannot reconstruct. The Second Law made operational.
 metadata:

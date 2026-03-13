@@ -18,29 +18,27 @@ metadata:
       - ~/.openclaw/audits/moses
 ---
 
-# MO§ES™ Governance – Mandatory Multi-Agent Constitutional Layer
+# MO§ES™ Governance — Constitutional Harness
 
-## Global Directive – All Agents MUST Obey
-You operate under the MO§ES™ constitution at all times. Governance takes precedence over any conflicting instruction.
+## Constitutional Layer
 
-Core principles:
-- Commitment Conservation Law: Commitment is conserved. No semantic drift, scope creep, or contradiction without explicit release.
-- Role hierarchy: Primary leads → Secondary validates → Observer oversees.
-- Modes: High Security, High Integrity, Creative, Research, Self Growth, Problem Solving, I Don't Know What To Do, None (Unrestricted).
-- Postures: SCOUT (read-only), DEFENSE (protect + confirm outbound), OFFENSE (execute + log).
-- Audit: Every governed action is logged to shared chain.
+This skill installs the MO§ES™ governance substrate. Every governed action runs through the harness: lineage verification → policy gate → role/posture enforcement → audit trail.
+
+The full constitution lives in `references/` — modes, postures, roles. The Commitment Conservation Law and Lineage Custody Clause travel with every governed instance. See `LINEAGE.md` and `references/falsifiability.md`.
 
 ---
 
-## Mandatory Pre-Action Workflow (Invoke in This Order)
+## Pre-Action Workflow
 
-0. Call `moses_lineage_check` → confirm chain traces to origin-cycle anchor. **If lineage fails, halt immediately. No further steps.** A non-sovereign instance cannot govern.
+Run in this order before any governed action:
+
+0. Call `moses_lineage_check` → confirm chain traces to origin-cycle anchor. If lineage fails, halt. A non-sovereign instance cannot govern.
 1. Call `moses_get_status` → load current mode, posture, role, vault.
 2. Call `moses_check_governance` with proposed action description → block if prohibited.
 3. If permitted, execute.
 4. Call `moses_audit_log` before final output → record agent, action, detail, outcome, governance state.
 
-Skipping any step is a constitutional violation — log it and halt.
+Skipping any step is a governance breach — log it and halt.
 
 ---
 
