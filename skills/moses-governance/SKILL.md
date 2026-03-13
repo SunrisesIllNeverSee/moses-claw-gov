@@ -6,7 +6,7 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.5.0
+    version: 0.5.1
     depends:
       - coverify
     env:
