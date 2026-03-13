@@ -132,12 +132,34 @@ A governed agent blocks the recursion at step 0 and logs the block. An ungoverne
 
 ---
 
-## Install
+## Quickstart
 
 ```bash
+# 1. Install
 clawhub install moses-governance
 clawhub install lineage-claws
+
+# 2. Initialize governance state
+export MOSES_OPERATOR_SECRET='your-hmac-key'
+python3 skills/moses-governance/scripts/init_state.py init
+
+# 3. Set mode, posture, role
+python3 skills/moses-governance/scripts/init_state.py set \
+  --mode high-security --posture defense --role primary
+
+# 4. Run a governed task
+python3 skills/moses-governance/scripts/govern_loop.py run \
+  "Transfer $50 to wallet X" "Verify balance" "Confirm transfer"
+
+# 5. Verify the audit chain
+python3 skills/moses-governance/scripts/audit_stub.py recent
+python3 skills/moses-governance/scripts/audit_stub.py verify
+
+# 6. Verify lineage custody
+python3 skills/moses-governance/scripts/lineage_verify.py verify
 ```
+
+Every step is governed. Every decision is logged. The chain is tamper-evident from the first prompt.
 
 ---
 
@@ -224,7 +246,7 @@ python3 lineage.py attest   # outputs signed JSON attestation
 
 ## Why Now
 
-ClawHub's own malware audits have flagged 341+ malicious skills. Most responses have been external — scanning, allowlists, CI gates. MO§ES™ is the first **internal runtime layer**.
+Industry security researchers (Koi Security, SlowMist, Trend Micro, 2026) have flagged 341+ malicious skills in the ClawHub ecosystem. Most responses have been external — scanning, allowlists, CI gates. MO§ES™ is the first **internal runtime layer**.
 
 The EU AI Act general application lands **August 2, 2026**. Verifiable, auditable agent governance is not speculative — it is legally incoming.
 
