@@ -1,7 +1,7 @@
 ---
 name: moses-governance
 license: MIT
-description: The constitutional governance harness for OpenClaw agents. Enforces policy invariants, lineage custody, and tamper-evident audit so any execution runtime stays trustworthy. Models are commoditizing — the harness is the moat.
+description: "MO§ES™ Governance Harness — constitutional enforcement layer for AI agents. Modes, postures, roles, SHA-256 audit chain, lineage custody, signing gate, commitment verification. The harness that makes any execution runtime trustworthy."
 metadata:
   openclaw:
     emoji: ⚖️
