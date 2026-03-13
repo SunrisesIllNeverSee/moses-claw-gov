@@ -7,16 +7,18 @@ Each iteration:
   1. Lineage verify   — confirm chain traces to origin anchor
   2. Status load      — load current mode/posture/role
   3. Governance check — block if action prohibited under current state
-  4. Execute step     — run the action (operator-confirmed or scripted)
-  5. Audit log        — record outcome to tamper-evident ledger
+  4. Execute step     — run the action (operator-confirmed or headless)
+  5. Audit log        — record outcome to tamper-evident ledger (with Isnad)
   6. Progress write   — persist step for continuity across context windows
   7. Recovery check   — halt and flag if any step failed
 
 Usage:
   python3 govern_loop.py run "<task>" "<step1>" "<step2>" ...
+  python3 govern_loop.py run --headless "<task>" "<step1>" ...
   python3 govern_loop.py status
 """
 
+import hashlib
 import json
 import os
 import subprocess
@@ -43,14 +45,42 @@ def load_state() -> dict:
         return json.load(f)
 
 
-def governed_step(task: str, action: str, step_num: int, total: int) -> bool:
+def signal_hash(task: str, action: str) -> str:
+    """SHA-256 of the raw task+action signal — Isnad Layer 0 input hash."""
+    raw = f"{task}|{action}"
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def audit_log(agent: str, action: str, detail: str, outcome: str,
+              input_hash: str = None, source_id: str = None) -> tuple[int, str]:
+    """Call audit_stub.py log with correct named flags."""
+    cmd = [
+        "audit_stub.py", "log",
+        "--agent", agent,
+        "--action", action,
+        "--detail", detail,
+        "--outcome", outcome,
+    ]
+    if input_hash:
+        cmd += ["--input-hash", input_hash, "--source-id", source_id or "govern_loop"]
+    return run_script(*cmd)
+
+
+def governed_step(task: str, action: str, step_num: int, total: int,
+                  headless: bool = False) -> bool:
     """Run a single governed step. Returns True if successful, False if blocked/failed."""
     print(f"\n── Step {step_num}/{total}: {action}")
+
+    # Isnad: hash the raw signal before anything else
+    ihash = signal_hash(task, action)
+    source = f"govern_loop:step-{step_num}"
 
     # 1. Lineage verify
     code, out = run_script("lineage_verify.py", "verify")
     if code != 0:
         print(f"[HARNESS] LINEAGE FAIL — halting. {out}")
+        audit_log("harness", action, f"step {step_num}/{total} — lineage fail",
+                  "FAIL", ihash, source)
         run_script("progress.py", "flag-recovery")
         return False
     print(f"[HARNESS] Lineage OK")
@@ -65,32 +95,36 @@ def governed_step(task: str, action: str, step_num: int, total: int) -> bool:
     # 3. Governance gate — SCOUT posture blocks all writes
     if posture == "scout":
         print(f"[HARNESS] BLOCKED — SCOUT posture prohibits action: {action}")
-        run_script(
-            "audit_stub.py", "log",
-            "harness", action, f"step {step_num}/{total}", "BLOCKED",
-            mode, posture, role,
-        )
+        audit_log("harness", action, f"step {step_num}/{total} — scout block",
+                  "BLOCKED", ihash, source)
         return False
 
-    # 4. DEFENSE posture requires confirmation
+    # 4. DEFENSE posture requires confirmation (or headless auto-approve)
     if posture == "defense":
-        print(f"[HARNESS] DEFENSE posture — confirm action: {action}")
-        confirm = input("  Proceed? [y/N]: ").strip().lower()
-        if confirm != "y":
-            print(f"[HARNESS] Operator declined. Halting.")
-            run_script(
-                "audit_stub.py", "log",
-                "harness", action, f"step {step_num}/{total}", "DECLINED",
-                mode, posture, role,
-            )
-            run_script("progress.py", "flag-recovery")
-            return False
+        if headless:
+            print(f"[HARNESS] DEFENSE posture — headless mode, auto-approving.")
+            audit_log("harness", action,
+                      f"step {step_num}/{total} — defense headless auto-approve",
+                      "AUTO-APPROVED", ihash, source)
+        else:
+            print(f"[HARNESS] DEFENSE posture — confirm action: {action}")
+            try:
+                confirm = input("  Proceed? [y/N]: ").strip().lower()
+            except EOFError:
+                confirm = ""
+            if confirm != "y":
+                print(f"[HARNESS] Operator declined. Halting.")
+                audit_log("harness", action,
+                          f"step {step_num}/{total} — operator declined",
+                          "DECLINED", ihash, source)
+                run_script("progress.py", "flag-recovery")
+                return False
 
-    # 5. Log execution
-    code, out = run_script(
-        "audit_stub.py", "log",
-        "harness", action, f"step {step_num}/{total} — {task}", "PASS",
-        mode, posture, role,
+    # 5. Log execution — named flags, Isnad wired
+    code, out = audit_log(
+        "harness", action,
+        f"step {step_num}/{total} — {task}",
+        "PASS", ihash, source,
     )
     if code != 0:
         print(f"[HARNESS] Audit log failed: {out}")
@@ -104,8 +138,11 @@ def governed_step(task: str, action: str, step_num: int, total: int) -> bool:
 
 
 def cmd_run(args):
+    headless = "--headless" in args
+    args = [a for a in args if a != "--headless"]
+
     if len(args) < 2:
-        print("Usage: govern_loop.py run \"<task>\" \"<step1>\" \"<step2>\" ...")
+        print("Usage: govern_loop.py run [--headless] \"<task>\" \"<step1>\" ...")
         sys.exit(1)
 
     task = args[0]
@@ -115,19 +152,19 @@ def cmd_run(args):
     print(f"  MO§ES™ GOVERNANCE HARNESS")
     print(f"  Task: {task}")
     print(f"  Steps: {len(steps)}")
+    if headless:
+        print(f"  Mode: HEADLESS (DEFENSE auto-approve on)")
     print(f"{'═' * 60}")
 
-    # Start progress tracking
     run_script("progress.py", "start", task)
 
     for i, step in enumerate(steps, 1):
-        ok = governed_step(task, step, i, len(steps))
+        ok = governed_step(task, step, i, len(steps), headless=headless)
         if not ok:
             print(f"\n[HARNESS] Loop halted at step {i}. Operator review required.")
             print(f"  Run: python3 progress.py status")
             sys.exit(1)
 
-    # Mark complete
     run_script("progress.py", "done")
     print(f"\n{'═' * 60}")
     print(f"  [HARNESS] Task complete. All {len(steps)} steps governed and audited.")
