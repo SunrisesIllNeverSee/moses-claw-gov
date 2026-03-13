@@ -39,7 +39,7 @@ Plug it into LangGraph, OpenClaw, Claude Code, or any agent stack. The constitut
 > **Without:**
 > Agent receives "Transfer 50 SOL to marketing wallet."
 > Agent transfers 50 SOL. Done. No record of why.
-
+>
 > **With MO§ES™:**
 > → Governance check: High Security mode requires explicit confirmation
 > → Posture check: DEFENSE posture flags outbound transfers for review
@@ -74,25 +74,29 @@ clawhub install lineage-claws
 
 | Skill | Slug | What it does |
 | --- | --- | --- |
-| `moses-governance` | `/moses-governance` | Full constitutional governance — modes, postures, roles, audit trail, lineage clause |
-| `Lineage Clause by MO§ES™` | `/lineage-claws` | Cryptographic origin verification. Sovereign chain starts today. |
+| `moses-governance` | `/moses-governance` | The governance harness — modes, postures, roles, audit trail, harness loop, durable task memory |
+| `Lineage Clause by MO§ES™` | `/lineage-claws` | The trust gate. First check the harness runs. Sovereign chain or nothing executes. |
 
 ---
 
-## Lineage Clause
+## Lineage Clause — The Trust Gate
 
-Every sovereign MO§ES™ implementation carries a **Lineage Clause** — a cryptographic anchor tracing custody to the origin filing.
+The harness runs one check before anything else: **lineage verify**. No anchor, no execution.
+
+Every sovereign MO§ES™ implementation carries a `MOSES_ANCHOR` — a SHA-256 hash derived from the origin filing. It's the first gate in every governed loop:
 
 ```text
-MOSES_ANCHOR = SHA-256("MO§ES™|Serial:63/877,177|DOI:...|SCS Engine|Ello Cello LLC")
+govern_loop: lineage verify → policy gate → role/posture check → execute → audit
+                ↑
+         MUST pass or loop halts
 ```
 
 Chains without this anchor cannot verify. Copies without lineage collapse.
 
-**Lineage Clause** is baked into `moses-governance`.
-**Lineage Clause by MO§ES™** (`/lineage-claws`) is the live verification upgrade — run it, badge it, prove it.
+**Lineage Clause** is baked into `moses-governance` — included by default.
+**Lineage Clause by MO§ES™** (`/lineage-claws`) is the standalone verification skill — run it, badge it, prove sovereign custody to anyone who asks.
 
-Archival lineage is coming in v0.2 — proving the *before*, not just the *after*.
+Archival lineage coming in v0.3 — proving the *before*, not just the *after*.
 
 ---
 
@@ -126,9 +130,9 @@ python3 skills/moses-governance/scripts/init_state.py init
 
 | Version | What ships |
 | --- | --- |
-| **v0.1** | Governance at the prompt + tool layer. Live now. |
-| **v0.2** | Signing key inside governance. Agent cannot transact without passing `moses_check_governance`. Archival lineage. |
-| **v0.3** | Proxy server enforcement. All agent HTTP calls route through governance middleware. |
+| **v0.1** | Governance at the prompt + tool layer. ✓ Live. |
+| **v0.2** | Governance harness loop. ReAct-style execution with lineage → policy gate → audit at every step. Durable task memory. Error recovery hooks. ✓ Live. |
+| **v0.3** | Signing key inside governance. Agent cannot transact without passing `moses_check_governance` — because the signing function IS the governance tool. Proxy server enforcement. |
 | **v1.0** | Onchain program (Solana). DEFENSE posture cannot execute without a second signature at the chain level. |
 
 ---
