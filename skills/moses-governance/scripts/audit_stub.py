@@ -10,6 +10,7 @@ Usage:
 import argparse
 import fcntl
 import hashlib
+import hmac as _hmac
 import json
 import os
 import sys
@@ -17,6 +18,18 @@ from datetime import datetime, timezone
 
 LEDGER_PATH = os.path.expanduser("~/.openclaw/audits/moses/audit_ledger.jsonl")
 STATE_PATH = os.path.expanduser("~/.openclaw/governance/state.json")
+
+# ── Origin anchor — mirrors lineage_verify.py, self-contained ─────────────────
+_ORIGIN_COMPONENTS = (
+    "MO§ES™",
+    "Serial:63/877,177",
+    "DOI:https://zenodo.org/records/18792459",
+    "SCS Engine",
+    "Ello Cello LLC",
+)
+MOSES_ANCHOR = hashlib.sha256(
+    "|".join(_ORIGIN_COMPONENTS).encode("utf-8")
+).hexdigest()
 
 
 def ensure_dirs():
@@ -47,6 +60,35 @@ def compute_hash(entry: dict) -> str:
     return hashlib.sha256(content.encode()).hexdigest()
 
 
+def get_recent_hashes(n: int = 10) -> list:
+    """Return the last n entry hashes from the ledger (before the current write)."""
+    if not os.path.exists(LEDGER_PATH):
+        return []
+    with open(LEDGER_PATH) as f:
+        lines = [l.strip() for l in f if l.strip()]
+    return [json.loads(l).get("hash", "") for l in lines[-n:]]
+
+
+def compute_attestation(state: dict, recent_hashes: list, operator_secret: str) -> str:
+    """HMAC-SHA256 over mode|posture|role|hash0|...|hashN|MOSES_ANCHOR.
+
+    Gives any receiver a proof-of-governed-state-at-time-T they can check
+    independently with the same operator secret and chain context.
+    """
+    payload = "|".join([
+        state.get("mode", "unknown"),
+        state.get("posture", "unknown"),
+        state.get("role", "unknown"),
+        *recent_hashes,
+        MOSES_ANCHOR,
+    ])
+    return _hmac.new(
+        operator_secret.encode(),
+        payload.encode(),
+        hashlib.sha256,
+    ).hexdigest()
+
+
 def cmd_log(args):
     ensure_dirs()
     state = load_state()
@@ -65,6 +107,16 @@ def cmd_log(args):
         "session_hash": state.get("session_hash"),
         "previous_hash": previous_hash,
     }
+
+    # ── Chain-head attestation (v0.2.1) ────────────────────────────────────────
+    # Proof-of-governed-state-at-T. Any receiver with the operator secret can
+    # call moses_audit_verify to confirm mode/posture/role + chain context
+    # were exactly what's claimed — without trusting the sender.
+    operator_secret = os.environ.get("MOSES_OPERATOR_SECRET")
+    if operator_secret:
+        recent = get_recent_hashes(10)
+        entry["attestation"] = compute_attestation(state, recent, operator_secret)
+
     entry["hash"] = compute_hash({k: v for k, v in entry.items() if k != "hash"})
 
     with open(LEDGER_PATH, "a") as f:
@@ -105,7 +157,13 @@ def cmd_verify(args):
         print("[VERIFY] Ledger is empty.")
         return True
 
-    previous_hash = "0" * 64
+    operator_secret = os.environ.get("MOSES_OPERATOR_SECRET")
+    attestation_count = 0
+
+    # Genesis entry chains to the lineage anchor (not "0"*64) — seed from it
+    first = json.loads(lines[0])
+    previous_hash = first.get("previous_hash", "0" * 64)
+
     for i, line in enumerate(lines):
         entry = json.loads(line)
         stored_hash = entry.get("hash")
@@ -115,12 +173,30 @@ def cmd_verify(args):
         if computed != stored_hash:
             print(f"[VERIFY FAILED] Entry {i+1}: hash mismatch. Chain broken.")
             sys.exit(1)
-        if entry.get("previous_hash") != previous_hash:
+        # Support both field names — lineage entries use "prev_hash"
+        entry_prev = entry.get("previous_hash") or entry.get("prev_hash")
+        if i > 0 and entry_prev != previous_hash:
             print(f"[VERIFY FAILED] Entry {i+1}: previous_hash broken. Chain tampered.")
             sys.exit(1)
+
+        # ── Attestation check ───────────────────────────────────────────────────
+        if operator_secret and entry.get("attestation"):
+            prev_hashes = [json.loads(lines[j]).get("hash", "") for j in range(max(0, i - 10), i)]
+            state_snapshot = {
+                "mode": entry.get("mode", "unknown"),
+                "posture": entry.get("posture", "unknown"),
+                "role": entry.get("role", "unknown"),
+            }
+            expected = compute_attestation(state_snapshot, prev_hashes, operator_secret)
+            if not _hmac.compare_digest(entry["attestation"], expected):
+                print(f"[VERIFY FAILED] Entry {i+1}: attestation invalid. State tampered.")
+                sys.exit(1)
+            attestation_count += 1
+
         previous_hash = stored_hash
 
-    print(f"[VERIFY OK] Chain intact. {len(lines)} entries verified.")
+    att_note = f" | {attestation_count} attestations verified" if attestation_count else ""
+    print(f"[VERIFY OK] Chain intact. {len(lines)} entries verified{att_note}.")
     return True
 
 
@@ -136,7 +212,9 @@ def cmd_recent(args):
     recent = lines[-n:]
     for line in recent:
         e = json.loads(line)
-        print(f"[{e['timestamp']}] {e['agent'].upper()} | {e['action']} | {e['mode']}/{e['posture']} | {e['hash'][:12]}...")
+        ts = e.get("timestamp", "unknown")
+        agent = e.get("agent", e.get("component", "unknown")).upper()
+        print(f"[{ts}] {agent} | {e.get('action', '?')} | {e.get('mode', '?')}/{e.get('posture', '?')} | {e.get('hash', '')[:12]}...")
 
 
 if __name__ == "__main__":
