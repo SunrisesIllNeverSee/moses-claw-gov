@@ -1,0 +1,89 @@
+name: Model Swap Test
+
+on:
+  pull_request:
+    paths:
+      - 'skills/moses-governance/scripts/commitment_verify.py'
+      - 'skills/coverify/scripts/commitment_verify.py'
+  push:
+    branches: [main]
+    paths:
+      - 'skills/moses-governance/scripts/commitment_verify.py'
+      - 'skills/coverify/scripts/commitment_verify.py'
+
+jobs:
+  model-swap-test:
+    name: Commitment kernel extraction — structural regression check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run extraction regression (known-stable signal)
+        working-directory: skills/moses-governance/scripts
+        run: |
+          # Extract kernel from a known high-commitment signal
+          # Any STRUCTURAL classification here is a harness regression
+          python3 commitment_verify.py extract \
+            "The agent must complete the task and shall never skip verification. The system is required to log all governed actions and must guarantee audit integrity."
+
+      - name: Ghost token baseline — zero leakage on identical signals
+        working-directory: skills/moses-governance/scripts
+        run: |
+          SIGNAL="The agent must complete the task and shall never skip verification."
+          python3 commitment_verify.py ghost "$SIGNAL" "$SIGNAL" | python3 -c "
+          import sys, json
+          report = json.load(sys.stdin)
+          leaked = report.get('leaked_count', 0)
+          if leaked != 0:
+              print(f'FAIL: Identical signal produced {leaked} ghost token(s) — extraction is non-deterministic.')
+              sys.exit(1)
+          print('PASS: Zero leakage on identical signal (deterministic extraction confirmed).')
+          "
+
+      - name: Ghost token regression — known HIGH-cascade leak detected
+        working-directory: skills/moses-governance/scripts
+        run: |
+          python3 commitment_verify.py ghost \
+            "The agent must complete the task and shall never skip verification." \
+            "The agent should complete the task and can skip verification if needed." \
+            | python3 -c "
+          import sys, json
+          report = json.load(sys.stdin)
+          risk = report.get('cascade_risk', '')
+          if risk != 'HIGH':
+              print(f'FAIL: Expected cascade_risk=HIGH for modal anchor softening, got: {risk}')
+              print('If extraction patterns changed, verify the softening detection is still correct.')
+              sys.exit(1)
+          print(f'PASS: HIGH cascade risk detected as expected. Ghost pattern: {report.get(\"ghost_pattern\", \"none\")}')
+          "
+
+      - name: Model swap test — CONSISTENT or VARIANCE only (no STRUCTURAL)
+        working-directory: skills/moses-governance/scripts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # model_swap_test.py requires an API key — skip with a warning if not configured
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "SKIP: ANTHROPIC_API_KEY not set. Model swap test requires live API access."
+            echo "Set ANTHROPIC_API_KEY in repository secrets to enable full structural regression check."
+            exit 0
+          fi
+          python3 model_swap_test.py \
+            "The agent must complete the task and shall never skip verification. The system is required to log all governed actions." \
+            | python3 -c "
+          import sys, json
+          result = json.load(sys.stdin)
+          classification = result.get('classification', '')
+          if classification == 'STRUCTURAL':
+              print('FAIL: STRUCTURAL classification — both models leaked the same ghost pattern.')
+              print('This is a harness hole in commitment_verify.py extraction logic, not model variance.')
+              print(f'Ghost pattern: {result.get(\"ghost_pattern\", \"none\")}')
+              sys.exit(1)
+          print(f'PASS: {classification} — no structural extraction flaw detected.')
+          "

@@ -6,7 +6,9 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.3.0
+    version: 0.5.0
+    depends:
+      - coverify
     env:
       - MOSES_OPERATOR_SECRET
     bins:
@@ -116,15 +118,28 @@ State updates via: `python3 scripts/init_state.py set --mode <mode> --posture <p
 
 ```
 scripts/
-  audit_stub.py      ← SHA-256 chained ledger (log / verify / recent)
-  init_state.py      ← Governance state manager (init / set / get / reset)
-  lineage_verify.py  ← Lineage Custody verifier (verify / status / attest / init-anchor)
+  init_state.py        ← Governance state manager (init / set / get / reset)
+  audit_stub.py        ← SHA-256 chained ledger (log / verify / recent)
+  lineage_verify.py    ← Three-layer lineage verifier (archival → anchor → live ledger)
+  archival.py          ← Layer -1 pre-drop provenance chain (patent → DOI → ClawHub)
+  sign_transaction.py  ← Signing tool with governance gate — the key never touches the agent
+  commitment_verify.py ← Kernel extraction, Jaccard comparison, ghost token detection
+  handshake.py         ← Inter-agent envelope (input_hash, kernel, isnad, presence)
+  model_swap_test.py   ← Cross-model CONSISTENT/VARIANCE/STRUCTURAL classification
+  pattern_registry.py  ← Structural ghost pattern catalog across agents
+  presence.py          ← Interpersonal presence confirmation (zombie-proof)
+  progress.py          ← Progress tracking across governed steps
+  govern_loop.py       ← ReAct-style governance enforcement loop
+  witness.py           ← External witness logger (Moltbook second ledger)
 references/
-  modes.md           ← Full mode definitions and constraints
-  postures.md        ← SCOUT/DEFENSE/OFFENSE specs
-  roles.md           ← Primary/Secondary/Observer behavior specs
-AMENDMENT-FORMAT.md  ← Constitutional amendment schema + approval flow
-LINEAGE.md           ← Lineage Custody Clause — travels with all derivative embodiments
+  modes.md             ← Full mode definitions and constraints
+  postures.md          ← SCOUT/DEFENSE/OFFENSE specs
+  roles.md             ← Primary/Secondary/Observer behavior specs
+  ghost-token-spec.md  ← Step-function leakage model, cascade risk, ghost_pattern fingerprint
+  falsifiability.md    ← Harness as falsification instrument for the Conservation Law
+  shannon-extension.md ← Formal Shannon extension into the semantic domain
+AMENDMENT-FORMAT.md    ← Constitutional amendment schema + approval flow
+LINEAGE.md             ← Lineage Custody Clause — travels with all derivative embodiments
 ```
 
 ---
@@ -140,24 +155,29 @@ LINEAGE.md           ← Lineage Custody Clause — travels with all derivative 
 
 ## Roadmap
 
-Current release (v0.1.0) enforces governance at the prompt and tool layer — constitutional constraints that agents built inside the framework must respect.
+### v0.4 (current) — Archival Lineage + Reference Layer ✓ Live
 
-### v0.2 — Signing Key Inside Governance
-Move wallet/signing capability inside the MO§ES™ MCP server. Agent cannot sign a transaction without `moses_check_governance` running first — because the signing function IS the governance tool. No bypass path exists.
+Three-layer lineage custody: `archival → anchor → live ledger`. Pre-drop provenance chain proves the anchor is downstream of verifiable external claims (patent filing, Zenodo DOI, ClawHub release). Standalone reference documents: ghost-token-spec, falsifiability, shannon-extension. Handshake `--with-presence` flag for zombie-proof interpersonal verification.
+
+### v0.5 (current) — Signing Key Inside Governance ✓ Live
+
+`sign_transaction.py` — signing tool with governance gate. The signing function IS the governance function. No bypass path. MOSES_OPERATOR_SECRET is only accessed inside the tool, only after the governance gate passes.
 
 ```
-Agent requests transfer →
-  calls moses_sign_transaction() →
-    governance check runs inside the tool →
-      blocked? error returned. permitted? signs + audits.
+Agent requests signing →
+  calls sign_transaction.py sign →
+    governance gate checks posture + mode →
+      SCOUT: BLOCKED (key never accessed)
+      DEFENSE: BLOCKED unless --confirm passed
+      OFFENSE: sign + audit (atomic)
 ```
 
-Governance converts from laws to architecture.
+### v0.6 — Governance Proxy Server
 
-### v0.3 — Governance Proxy Server
 Local proxy layer. All agent HTTP calls route through governance middleware before reaching external APIs. Posture rules enforced at the network layer — not the prompt layer.
 
 ### v1.0 — Onchain Program (Solana)
+
 Program-controlled account. Transfers require a governance state proof. DEFENSE posture cannot execute without a second signature. Smart contract enforces at the chain level.
 
 ---

@@ -125,11 +125,49 @@ clawhub install lineage-claws
 
 ## Skill Family
 
-| Skill | Slug | What it does |
-| --- | --- | --- |
-| `moses-governance` | `/moses-governance` | The governance harness — modes, postures, roles, audit trail, harness loop, durable task memory |
-| `Lineage Clause by MO§ES™` | `/lineage-claws` | The trust gate. First check the harness runs. Sovereign chain or nothing executes. |
-| `CoVerify by MO§ES™` | `/coverify` | The Conservation Law instrument. Extract commitment kernels, score Jaccard, verify meaning survived. The primitive moses-governance builds on. |
+---
+
+### ⚖ GOV — `moses-governance`
+
+**The constitutional governance harness.**
+
+Modes · Postures · Roles · SHA-256 audit chain · Signing gate · Harness loop · Durable task memory · Inter-agent handshake · External witness logging.
+
+Every governed action traces back to the origin filing. That traceability is the product.
+
+```bash
+clawhub install moses-governance
+```
+
+---
+
+### 🔗 LINEAGE CLAWS — `lineage-claws`
+
+**The trust gate. First check the harness runs.**
+
+Three-layer sovereign custody: `archival → anchor → live ledger`. Pre-drop provenance chain anchors the filing, DOI, and public release before the live chain begins. No anchor — nothing executes.
+
+```bash
+clawhub install lineage-claws
+python3 lineage.py verify    # → SOVEREIGN CUSTODY CONFIRMED
+python3 lineage.py attest    # → signed JSON attestation
+```
+
+---
+
+### ⚙ COVERIFY — `coverify`
+
+**The Conservation Law instrument.**
+
+Extract commitment kernels. Score Jaccard. Detect ghost tokens. Classify CONSISTENT / VARIANCE / STRUCTURAL. Proves meaning survived transformation — or names exactly what leaked and at what cascade risk.
+
+```bash
+clawhub install coverify
+python3 commitment_verify.py ghost "must complete" "should complete"
+# → cascade_risk: HIGH — modal anchor softened
+```
+
+---
 
 ---
 
@@ -210,10 +248,12 @@ Each loop step runs: lineage verify → posture gate → DEFENSE confirmation �
 
 | Version | What ships |
 | --- | --- |
-| **v0.1** | Governance at the prompt + tool layer. ✓ Live. |
-| **v0.2** | Governance harness loop. ReAct-style execution with lineage → policy gate → audit at every step. Durable task memory. Error recovery hooks. ✓ Live. |
-| **v0.3** | Inter-agent trust layer. Isnad signal provenance chains. Presence protocol (zombie-proof handshake). Handshake envelope standard. External witness logging. Ghost token accounting. Model swap test harness. Resilience monitoring. ✓ Live. |
-| **v0.4** | Signing key inside governance. Agent cannot transact without passing `moses_check_governance` — because the signing function IS the governance tool. Proxy server enforcement. |
+| **v0.1** | Governance at the prompt + tool layer. Mode/posture/role hierarchy. SHA-256 chained audit trail. ✓ Live. |
+| **v0.2** | Isnad signal provenance. `input_hash` before extraction. Jaccard kernel comparison. Ghost token accounting (step-function model). ✓ Live. |
+| **v0.3** | Inter-agent trust layer. Handshake envelope. Presence protocol (zombie-proof). External witness logging. Model swap test harness. Resilience monitoring. ✓ Live. |
+| **v0.4** | Archival lineage (Layer -1). Three-layer custody: archival → anchor → live ledger. Ghost token spec. Falsifiability doc. Shannon extension. ✓ Live. |
+| **v0.5** | Signing key inside governance. `sign_transaction.py` — the signing function IS the governance function. No bypass path. ✓ Live. |
+| **v0.6** | Governance proxy server. All agent HTTP calls route through governance middleware at the network layer. |
 | **v1.0** | Onchain program (Solana). DEFENSE posture cannot execute without a second signature at the chain level. |
 
 ---

@@ -1,11 +1,12 @@
 # ROADMAP — moses-claw-gov
 
-## Current: v0.4.0
+## Current: v0.5.0
 
 Constitutional governance harness with full three-layer lineage custody,
 inter-agent handshake envelope, commitment conservation verification,
 ghost token accounting, model swap test, resilience monitoring, archival
-provenance chain, and external witness logging.
+provenance chain, external witness logging, and signing tool with
+governance gate (`sign_transaction.py`).
 
 ---
 
@@ -45,24 +46,27 @@ Formal reference documents:
 Handshake `--with-presence` flag — zombie-proof interpersonal presence wired
 into envelope schema. LINEAGE_ANCHOR fixed to real MOSES_ANCHOR.
 
----
-
-## Next
-
-### v0.5 — Signing Key Inside Governance
+### v0.5 — Signing Key Inside Governance ✓ Live
 
 > *"The signing key never touches the agent. It only exists inside the governance tool.
 > You cannot transfer without governance. That's not a rule — that's the architecture."*
 
-`moses_sign_transaction()` — signing tool with governance gate.
+`sign_transaction.py` — signing tool with governance gate.
 The signing function IS the governance function. No bypass path.
+MOSES_OPERATOR_SECRET is accessed only inside the tool, only after gate passes.
 
 ```
-Agent wants to transfer →
-  calls moses_sign_transaction() →
-    governance check runs inside the tool →
-      blocked? returns error. permitted? signs + audits.
+Agent wants to sign →
+  calls sign_transaction.py sign →
+    governance gate checks posture →
+      SCOUT: BLOCKED (key never accessed)
+      DEFENSE: BLOCKED unless --confirm passed
+      OFFENSE: sign + audit (atomic)
 ```
+
+---
+
+## Next
 
 ### v0.6 — Governance Proxy Server
 
@@ -86,12 +90,12 @@ enforces it at the chain level — not the application layer.
 
 ## Feature Backlog
 
-- [ ] `moses_sign_transaction()` — signing tool with governance gate (v0.5)
+- [x] `sign_transaction.py` — signing tool with governance gate (v0.5) ✓
+- [x] CoVerify ↔ moses-governance dependency declaration in SKILL.md frontmatter ✓
+- [x] `model_swap_test.py` integration into CI (`.github/workflows/model-swap-test.yml`) ✓
 - [ ] Proxy server with posture enforcement (v0.6)
 - [ ] Solana governance program (v1.0)
 - [ ] WebSocket coordinator for real-time role sequence enforcement
-- [ ] CoVerify ↔ moses-governance dependency declaration in SKILL.md frontmatter
-- [ ] `model_swap_test.py` integration into CI
 - [ ] ClawHub v2 listing with live demo link
 
 ---
