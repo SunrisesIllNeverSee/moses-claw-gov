@@ -22,5 +22,8 @@ jobs:
       - name: Authenticate
         run: clawhub login --token ${{ secrets.CLAWHUB_TOKEN }}
 
-      - name: Sync all updated skills
-        run: clawhub sync --all --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
+      - name: Sync core skills
+        run: |
+          clawhub sync moses-governance --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
+          clawhub sync lineage-claws --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
+          clawhub sync coverify --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
