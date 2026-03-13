@@ -89,7 +89,7 @@ clawhub install lineage-claws
 ## Commands
 
 | Command | What it does |
-|---|---|
+| --- | --- |
 | `python3 lineage.py init` | Write genesis entry anchored to `MOSES_ANCHOR` |
 | `python3 lineage.py verify` | Confirm full chain traces back to origin filing |
 | `python3 lineage.py badge` | Output shareable proof of sovereign lineage |
@@ -124,7 +124,7 @@ python3 lineage.py check || { echo "Lineage broken — deploy blocked"; exit 1; 
 
 ## Isnad Chain Integration (v0.3+)
 
-Lineage Clause proves **agent** provenance — the audit chain traces to origin. Isnad chains (shipping in `moses-governance` v0.3+) prove **signal** provenance — the raw input traces to source.
+Lineage Clause proves **agent** provenance — the audit chain traces to origin. Isnad chains (live in `moses-governance` v0.3) prove **signal** provenance — the raw input traces to source.
 
 Together:
 
@@ -138,10 +138,10 @@ Two custody chains. Two different questions. Both required for full inter-agent 
 ## Roadmap
 
 | Version | What ships |
-|---|---|
+| --- | --- |
 | **v0.1** | Drop anchor + chain verification. ✓ Live. |
 | **v0.2** | Archival lineage — proving the *before*, not just the *after*. Append-only record of hashed provenance claims predating the drop. Archival head hash feeds into the drop anchor. |
-| **v0.3** | Inter-agent signal provenance. Isnad chain verification — receivers confirm signal input hashes match before accepting an audit chain as valid. |
+| **v0.3** | Inter-agent signal provenance. Isnad chain verification — live in `moses-governance` v0.3. Receivers confirm signal input hashes match before accepting an audit chain as valid. ✓ Live. |
 
 ---
 

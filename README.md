@@ -150,7 +150,7 @@ Chains without this anchor cannot verify. Any MO§ES™-aware receiver running `
 **Lineage Clause** is baked into `moses-governance` — included by default.
 **Lineage Clause by MO§ES™** (`/lineage-claws`) is the standalone verification skill — run it, badge it, prove sovereign custody to anyone who asks.
 
-Archival lineage coming in v0.3 — proving the *before*, not just the *after*.
+Archival lineage coming in v0.4 — proving the *before*, not just the *after*.
 
 ---
 
@@ -159,8 +159,6 @@ Archival lineage coming in v0.3 — proving the *before*, not just the *after*.
 ClawHub's own malware audits have flagged 341+ malicious skills. Most responses have been external — scanning, allowlists, CI gates. MO§ES™ is the first **internal runtime layer**.
 
 The EU AI Act general application lands **August 2, 2026**. Verifiable, auditable agent governance is not speculative — it is legally incoming.
-
-No skill in the 9,000+ Claude plugin ecosystem has built a constitutional governance OS with behavioral modes, posture controls, role hierarchy, and a cryptographic audit chain. The closest analogs — IBM watsonx, Microsoft Agent 365, OpenAI Frontier — are enterprise infrastructure platforms, not installable skills.
 
 Enterprise platforms — IBM watsonx, Microsoft Sentinel, OpenAI Frontier — have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
 
