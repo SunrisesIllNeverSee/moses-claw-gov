@@ -5,8 +5,8 @@ description: The constitutional governance harness for OpenClaw agents. Enforces
 metadata:
   openclaw:
     emoji: ⚖️
-    tags: [governance, multi-agent, audit, constitution, safety]
-    version: 0.1.3
+    tags: [governance, harness, multi-agent, audit, constitution, safety]
+    version: 0.2.0
     env:
       - MOSES_OPERATOR_SECRET
     bins:
@@ -14,16 +14,6 @@ metadata:
     stateDirs:
       - ~/.openclaw/governance
       - ~/.openclaw/audits/moses
-requires:
-  bins:
-    - python3
-  stateDirs:
-    - ~/.openclaw/governance
-    - ~/.openclaw/audits/moses
-example: |
-  python3 scripts/lineage_verify.py init-anchor
-  python3 scripts/init_state.py init
-  python3 scripts/audit_stub.py recent
 ---
 
 # MO§ES™ Governance – Mandatory Multi-Agent Constitutional Layer
