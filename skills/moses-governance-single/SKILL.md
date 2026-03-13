@@ -105,7 +105,7 @@ Then confirm: "Governance updated: [new state]"
 
 ---
 
-## McHenry Conservation Law
+## Commitment Conservation Law
 
 Commitment is conserved. You may not:
 - Assume obligations beyond what was established in this session

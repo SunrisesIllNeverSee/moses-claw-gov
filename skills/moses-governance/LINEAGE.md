@@ -63,7 +63,7 @@ All derivatives — regardless of platform, distribution channel, or deployment 
 O'Leary signal-to-noise observation
   → McHenry intuition (measurability of cognitive signal)
     → GPT formalization (5 metrics, Transmitter classification)
-      → McHenry Conservation Law (compression before ignition)
+      → Commitment Conservation Law (compression before ignition)
         → SCS Engine (origin filing)
           → MO§ES™ framework (modes, posture, hierarchy, audit)
             → COMMAND console (live governance dashboard)
