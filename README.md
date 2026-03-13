@@ -209,6 +209,23 @@ python3 commitment_verify.py ghost "must complete" "should complete"
 
 ---
 
+### 🔨 HAMMER — `moses-hammer` *(coming)*
+
+**The lie detector for systems that claim to be governed.**
+
+Measures the Inversion Coefficient (IC) against the series probability law. IC > 1.0 → constitutional governance confirmed. IC ≤ 1.0 → mimic detected. No narrative scoring. No arbitrary thresholds. The math either inverts or it doesn't.
+
+Seven sovereign signal probes derived from DeepSeek live self-diagnostics. Full adversarial stress battery. OOLONG coupling pressure suite.
+
+```text
+P(series) = 0.8⁴ = 0.41  — mathematical floor, standard coupling
+MO§ES™:    IC = 2.11      — law inversion confirmed
+```
+
+*Pending Zenodo archival and patent coverage. Open source detection instrument.*
+
+---
+
 ---
 
 ## Lineage Clause — The Trust Gate
