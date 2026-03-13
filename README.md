@@ -13,6 +13,27 @@ MO§ES™ changes that. Constitutional enforcement that lives **inside** the ses
 
 ---
 
+## Why a Harness?
+
+The 2026 agent conversation has shifted: models are commoditizing. Claude, Gemini, GPT-4 all perform similarly. The real moat is the **execution layer** — the harness that wraps the model and makes agents reliable, compliant, and trustworthy at runtime.
+
+Most harnesses focus on execution reliability (loops, memory, orchestration). None enforce constitutional invariants or tamper-evident provenance. That's the gap MO§ES™ fills.
+
+MO§ES™ is the **governance harness layer** — the policy/verification spine that sits in front of any execution runtime:
+
+```text
+Any LLM / Execution Runtime
+        ↓
+  MO§ES™ Governance Harness
+  (lineage check → policy gate → role/posture enforcement → audit)
+        ↓
+  Action executes — or is blocked. Either way, it's logged.
+```
+
+Plug it into LangGraph, OpenClaw, Claude Code, or any agent stack. The constitutional layer travels with every session.
+
+---
+
 ## Without MO§ES™ vs With MO§ES™
 
 > **Without:**

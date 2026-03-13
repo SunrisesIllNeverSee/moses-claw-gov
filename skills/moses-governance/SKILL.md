@@ -1,7 +1,7 @@
 ---
 name: moses-governance
 license: MIT
-description: The first constitutional governance layer for AI agents. Enforces the McHenry Conservation Law of Commitment — no semantic drift, no scope creep, no contradiction without explicit release. Includes the Lineage Clause. Upgrade to Lineage Clause by MO§ES™ for cryptographic verification.
+description: The constitutional governance harness for OpenClaw agents. Enforces policy invariants, lineage custody, and tamper-evident audit so any execution runtime stays trustworthy. Models are commoditizing — the harness is the moat.
 metadata:
   openclaw:
     emoji: ⚖️
