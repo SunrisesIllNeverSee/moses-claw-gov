@@ -69,6 +69,41 @@ def get_recent_hashes(n: int = 10) -> list:
     return [json.loads(l).get("hash", "") for l in lines[-n:]]
 
 
+def get_last_isnad_hash() -> str:
+    """Return the isnad_hash of the most recent entry that has one."""
+    if not os.path.exists(LEDGER_PATH):
+        return "0" * 64
+    with open(LEDGER_PATH) as f:
+        lines = [l.strip() for l in f if l.strip()]
+    for line in reversed(lines):
+        e = json.loads(line)
+        if e.get("isnad", {}).get("isnad_hash"):
+            return e["isnad"]["isnad_hash"]
+    return "0" * 64
+
+
+def build_isnad(input_hash: str, source_id: str, agent: str) -> dict:
+    """Build an Isnad provenance entry for the raw signal.
+
+    Isnad (إسناد) = chain of custody of the signal itself.
+    Distinct from the audit chain (agent provenance) — this proves
+    where the signal came from before it entered the agent. Receivers
+    can verify identical inputs and trace signal lineage independently
+    of who processed it.
+    """
+    prev_isnad = get_last_isnad_hash()
+    isnad = {
+        "input_hash": input_hash,
+        "source_id": source_id or "unspecified",
+        "transmitter": agent,
+        "prev_isnad_hash": prev_isnad,
+    }
+    isnad["isnad_hash"] = hashlib.sha256(
+        json.dumps(isnad, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    return isnad
+
+
 def compute_attestation(state: dict, recent_hashes: list, operator_secret: str) -> str:
     """HMAC-SHA256 over mode|posture|role|hash0|...|hashN|MOSES_ANCHOR.
 
@@ -107,6 +142,24 @@ def cmd_log(args):
         "session_hash": state.get("session_hash"),
         "previous_hash": previous_hash,
     }
+
+    # ── Layer 0 + 2: Input signal hash + Isnad provenance chain (v0.2.3) ────────
+    # input_hash: SHA-256 of raw signal before extraction. Receiver recomputes
+    # from their copy — proves identical inputs, isolates extraction variance
+    # (model subjectivity) from true commitment leak.
+    #
+    # isnad: Isnad chain entry linking this signal to its upstream source.
+    # Receiver verifies isnad_hash traces back through prior signal handoffs.
+    # Full inter-agent trust: audit chain (agent) + isnad chain (signal).
+    #
+    # Usage: --input-hash $(echo -n "signal" | shasum -a 256 | cut -d' ' -f1)
+    #        --source-id "agent-a-session-xyz"
+    if args.input_hash:
+        entry["isnad"] = build_isnad(
+            args.input_hash,
+            args.source_id,
+            entry["agent"],
+        )
 
     # ── Chain-head attestation (v0.2.1) ────────────────────────────────────────
     # Proof-of-governed-state-at-T. Any receiver with the operator secret can
@@ -226,6 +279,8 @@ if __name__ == "__main__":
     log_p.add_argument("--action")
     log_p.add_argument("--detail")
     log_p.add_argument("--outcome")
+    log_p.add_argument("--input-hash", dest="input_hash", help="SHA-256 of raw signal before extraction (Isnad Layer 0)")
+    log_p.add_argument("--source-id", dest="source_id", help="Signal source identifier for Isnad provenance chain")
 
     verify_p = subparsers.add_parser("verify")
 
