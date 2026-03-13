@@ -5,6 +5,7 @@ metadata:
   openclaw:
     emoji: 🎛️
     tags: [governance, modes, constraints, behavioral]
+    version: 0.1.1
 requires:
   stateDirs:
     - ~/.openclaw/governance

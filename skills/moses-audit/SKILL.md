@@ -5,6 +5,7 @@ metadata:
   openclaw:
     emoji: 🔐
     tags: [audit, sha256, tamper-evident, governance, ledger]
+    version: 0.1.1
 requires:
   bins:
     - python3

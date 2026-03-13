@@ -5,6 +5,7 @@ metadata:
   openclaw:
     emoji: 🔄
     tags: [coordinator, multi-agent, sequencing, daemon, websocket]
+    version: 0.1.1
 requires:
   env:
     - MOSES_OPERATOR_SECRET

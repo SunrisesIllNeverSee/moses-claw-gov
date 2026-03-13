@@ -5,6 +5,7 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, audit, constitution, safety, modes, postures]
+    version: 0.1.1
 requires:
   env:
     - MOSES_OPERATOR_SECRET
