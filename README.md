@@ -113,6 +113,7 @@ clawhub install lineage-claws
 | --- | --- | --- |
 | `moses-governance` | `/moses-governance` | The governance harness — modes, postures, roles, audit trail, harness loop, durable task memory |
 | `Lineage Clause by MO§ES™` | `/lineage-claws` | The trust gate. First check the harness runs. Sovereign chain or nothing executes. |
+| `CoVerify by MO§ES™` | `/coverify` | The Conservation Law instrument. Extract commitment kernels, score Jaccard, verify meaning survived. The primitive moses-governance builds on. |
 
 ---
 
