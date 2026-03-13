@@ -11,6 +11,24 @@ MO§ES™ changes that. Constitutional enforcement that lives **inside** the ses
 - **Live demo:** [https://mos2es.io](https://mos2es.io)
 - **Contact:** [contact@burnmydays.com](mailto:contact@burnmydays.com)
 
+```text
+────────────────────────────────────────────────────────────
+  MO§ES™ LINEAGE BADGE
+────────────────────────────────────────────────────────────
+  system            : MO§ES™ Constitutional Governance
+  lineage_anchor    : 5cda97fa2ad53e199618f5a610240888ae09d5a1e5e17b0d48c676d37dcda636
+  genesis_hash      : 72030d99dd97739ffbf8baf9a53f8aa3e027f1b457027edb4649c71737139453
+  patent_serial     : 63/877,177
+  doi               : https://zenodo.org/records/18792459
+  anchored_at       : 2026-03-12T20:11:18.905326+00:00
+  custody           : Ello Cello LLC / Deric McHenry
+  verification      : python3 lineage.py verify
+────────────────────────────────────────────────────────────
+  Agents carrying this lineage are sovereign implementations.
+  Copies lacking this anchor cannot establish chain integrity.
+────────────────────────────────────────────────────────────
+```
+
 ---
 
 ## Why a Harness?

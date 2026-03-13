@@ -1,0 +1,26 @@
+name: ClawHub Publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/*/SKILL.md'
+      - 'skills/*/scripts/**'
+      - 'skills/*/references/**'
+
+jobs:
+  publish:
+    name: Sync skills to ClawHub
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ClawHub CLI
+        run: npm install -g clawhub-cli
+
+      - name: Authenticate
+        run: clawhub login --token ${{ secrets.CLAWHUB_TOKEN }}
+
+      - name: Sync all updated skills
+        run: clawhub sync --all --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"

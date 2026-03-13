@@ -51,9 +51,11 @@ This anchor replaces the standard `"0" * 64` genesis. Every audit chain in a sov
 | Command | What it does |
 |---------|-------------|
 | `python3 lineage.py init` | Write genesis entry anchored to origin filing |
-| `python3 lineage.py verify` | Confirm full chain traces to lineage anchor |
-| `python3 lineage.py badge` | Output shareable proof of sovereign lineage |
-| `python3 lineage.py check` | Machine-readable exit 0/1 for integrations |
+| `python3 lineage.py verify` | Confirm full three-layer chain: archival → anchor → live ledger |
+| `python3 lineage.py status` | Human-readable custody summary with layer health |
+| `python3 lineage.py badge` | Shareable proof block — lineage anchor, patent, DOI, custody |
+| `python3 lineage.py attest` | Signed attestation JSON — machine-verifiable sovereign proof |
+| `python3 lineage.py check` | Machine-readable exit 0/1 for CI integrations |
 
 ---
 
@@ -69,21 +71,21 @@ python3 lineage.py verify
 
 ---
 
-## Coming in v0.2 — Archival Lineage
-
-The drop anchor proves the *forward* chain. Archival lineage proves the *before*.
-
-v0.2 will add `archival.py` — a static, append-only record of hashed provenance claims predating the drop. Each claim (patent filing, academic paper, prior work) is hashed and chained. The archival head hash feeds into the drop anchor, making the live chain provably downstream of the full history.
+## Three-Layer Custody ✓ Live
 
 ```
 Archival chain (pre-drop) → archival_head_hash
                                     ↓
-                             drop_anchor (genesis)
+                             drop_anchor (MOSES_ANCHOR)
                                     ↓
                           live audit chain (post-drop)
 ```
 
-Anyone will be able to submit a hash and verify whether it's in the archival record — without the underlying content being revealed. The truth identifier, extended backwards in time.
+- **Layer -1 — Archival:** `archival.py` — static chain of hashed provenance claims predating the drop. Patent filing, Zenodo DOI, prior work. Archival head feeds into the drop anchor. Proves the live chain is downstream of the full history.
+- **Layer 0 — Anchor:** `MOSES_ANCHOR` — SHA-256 of origin components. The genesis. Chains not rooted here fail verification cryptographically.
+- **Layer 1 — Live ledger:** Every governed action appended to the running audit chain.
+
+`python3 lineage.py verify` reports all three layers. SOVEREIGN CUSTODY CONFIRMED requires all three OK.
 
 ---
 
