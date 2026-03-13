@@ -1,6 +1,6 @@
-# MO§ES™ Constitutional Governance
+# MO§ES™ Constitutional Governance Harness
 
-## The first constitutional governance layer for AI agents — now live on ClawHub
+## The first constitutional governance harness for AI agents — now live on ClawHub
 
 > Every AI agent operating right now — trading, managing treasuries, executing transactions — is ungoverned. No constraints. No audit trail. No hierarchy. No posture controls. When an agent moves money, nobody knows what rules it was following, because it wasn't following any.
 
