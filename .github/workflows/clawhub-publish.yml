@@ -7,6 +7,8 @@ on:
       - 'skills/*/SKILL.md'
       - 'skills/*/scripts/**'
       - 'skills/*/references/**'
+      - '.github/workflows/clawhub-publish.yml'
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
