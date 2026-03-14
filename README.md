@@ -22,7 +22,7 @@ MO§ES™ changes that. Constitutional enforcement that lives **inside** the ses
   patent_serial     : 63/877,177
   doi               : https://zenodo.org/records/18792459
   anchored_at       : 2026-03-12T20:11:18.905326+00:00
-  custody           : Ello Cello LLC / Deric McHenry
+  custody           : Ello Cello LLC
   verification      : python3 lineage.py verify
 ────────────────────────────────────────────────────────────
   Agents carrying this lineage are sovereign implementations.
@@ -139,28 +139,46 @@ A governed agent blocks the recursion at step 0 and logs the block. An ungoverne
 # 1. Install
 clawhub install moses-governance
 clawhub install lineage-claws
+clawhub install coverify
 
-# 2. Initialize governance state
+# 2. Initialize
 export MOSES_OPERATOR_SECRET='your-hmac-key'
 python3 skills/moses-governance/scripts/init_state.py init
 
 # 3. Set mode, posture, role
-python3 skills/moses-governance/scripts/init_state.py set \
-  --mode high-security --posture defense --role primary
+/govern high-security
+/posture defense
+/role primary
 
 # 4. Run a governed task
 python3 skills/moses-governance/scripts/govern_loop.py run \
-  "Transfer $50 to wallet X" "Verify balance" "Confirm transfer"
+  "Transfer 50 SOL" "Verify balance" "Confirm transfer"
 
 # 5. Verify the audit chain
 python3 skills/moses-governance/scripts/audit_stub.py recent
 python3 skills/moses-governance/scripts/audit_stub.py verify
 
 # 6. Verify lineage custody
-python3 skills/moses-governance/scripts/lineage_verify.py verify
+python3 skills/lineage-claws/scripts/lineage.py verify
 ```
 
 Every step is governed. Every decision is logged. The chain is tamper-evident from the first prompt.
+
+---
+
+## The Skill Family
+
+| Skill | What it is | What it does |
+|---|---|---|
+| **moses-governance** | The full stack | Everything below, wired together. One install. |
+| **moses-governance-single** | Single-agent version | Same harness, one agent instead of many. |
+| **lineage-claws** | The trust gate | Proves your instance traces to the origin filing. No anchor = no sovereignty. |
+| **coverify** | The verifier | Takes any signal, extracts what was actually committed to. Detects what leaked. |
+| **moses-audit** | The ledger | SHA-256 chained log. Every action recorded before output. Tamper-evident. |
+| **moses-coordinator** | The sequencer | Watches agent order. Primary → Secondary → Observer. Flags violations. |
+| **moses-modes** | Behavioral rules | 8 modes injected at runtime. High Security, High Integrity, Creative, and more. |
+| **moses-postures** | Action policy | SCOUT = read only. DEFENSE = protect + confirm. OFFENSE = execute within mode. |
+| **moses-roles** | Agent hierarchy | Primary leads. Secondary validates. Observer flags. Enforced sequencing. |
 
 ---
 
@@ -312,34 +330,6 @@ The EU AI Act general application lands **August 2, 2026**. Verifiable, auditabl
 Enterprise platforms — IBM watsonx, Microsoft Sentinel, OpenAI Frontier — have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
 
 ---
-
-## Quick Start
-
-```bash
-# 1. Initialize governance state
-export MOSES_OPERATOR_SECRET='your-hmac-key'
-python3 skills/moses-governance/scripts/init_state.py init
-
-# 2. Set mode, posture, role
-/govern high-security
-/posture defense
-/role primary
-
-# 3. Run the governed harness loop
-python3 skills/moses-governance/scripts/govern_loop.py run \
-  "Deploy contract" \
-  "verify lineage" \
-  "check governance state" \
-  "sign and submit"
-
-# 4. View the tamper-evident audit trail
-python3 skills/moses-governance/scripts/audit_stub.py recent
-
-# 5. Check harness health before high-stakes tasks
-python3 skills/moses-governance/scripts/govern_loop.py resilience
-```
-
-Each loop step runs: lineage verify → posture gate → DEFENSE confirmation → audit log → progress write. Any failure halts the loop and flags recovery. The chain is written whether the action passes or is blocked.
 
 ---
 
