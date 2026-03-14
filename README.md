@@ -1,4 +1,5 @@
-# MO§ES™ Constitutional Governance Harness
+# MO§ES™ Constitutional Claw
+>Governance Harness - CoVerify - Lineage Claws
 
 ## The first constitutional governance harness for AI agents — now live on ClawHub
 
