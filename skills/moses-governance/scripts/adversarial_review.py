@@ -1,0 +1,314 @@
+#!/usr/bin/env python3
+"""
+adversarial_review.py — MO§ES™ Blind Peer Review
+Adversarial commitment verification: did the governed output keep the commitments
+made in the original instruction?
+
+The harness checks that actions are governed before execution.
+This checks that outputs are governed after execution.
+Field checks are useless if the checker agrees with the output.
+Blind peer review closes that gap.
+
+Protocol:
+  1. Extract commitment kernel from original instruction C(I)
+  2. Extract commitment kernel from governed output C(O)
+  3. Score: J(C(I), C(O)) — did the output carry the instruction's commitments?
+  4. Ghost token report: what leaked between instruction and output?
+  5. Optional: run a second extraction pass (blind reviewer) — different model,
+     same output. If the second pass reaches the same verdict, the finding is
+     structural, not reviewer variance.
+
+Commands:
+  review "<instruction>" "<output>"         — full blind review
+  compare "<instruction>" "<output>"        — Jaccard only
+  post-review "<instruction>" "<output>"    — review + post to external witness
+
+Environment:
+  MOSES_WITNESS_ENABLED   — set to "1" to enable external witness posting
+  TRIALL_API_KEY          — triall.ai API key for external blind review
+  TRIALL_ENABLED          — set to "1" to send to triall.ai reviewer pool
+"""
+
+import hashlib
+import json
+import os
+import re
+import sys
+import urllib.request
+import urllib.error
+from datetime import datetime, timezone
+
+# Import extraction primitives from coverify
+# Supports both installed (same dir) and coverify standalone
+_dir = os.path.dirname(__file__)
+_coverify = os.path.join(_dir, "..", "..", "coverify", "scripts")
+sys.path.insert(0, _dir)
+sys.path.insert(0, os.path.abspath(_coverify))
+
+try:
+    from commitment_verify import extract_hard_commitments, jaccard_similarity, ghost_tokens
+except ImportError:
+    # Fallback: inline minimal extraction so script is self-contained
+    import re as _re
+
+    _PATTERNS = [
+        r"\b(must|shall|will|cannot|can not|won't|will not|never|always)\b",
+        r"\b(require[sd]?|guarantee[sd]?|ensure[sd]?|enforce[sd]?)\b",
+        r"\b(is required|are required|is prohibited|are prohibited)\b",
+        r"\b(no .{0,20} without|only if|only when|unless)\b",
+        r"\b(commit[s]?|committed|commitment)\b",
+        r"\b(exactly|precisely|strictly|solely|exclusively)\b",
+        r"\bnot .{0,10}(optional|negotiable|discretionary)\b",
+    ]
+    _COMPILED = [_re.compile(p, _re.IGNORECASE) for p in _PATTERNS]
+
+    def extract_hard_commitments(text):
+        sentences = _re.split(r'(?<=[.!?])\s+', text.strip())
+        kernel = set()
+        for sentence in sentences:
+            for pattern in _COMPILED:
+                if pattern.findall(sentence):
+                    kernel.add(_re.sub(r'\s+', ' ', sentence.strip().lower()))
+                    break
+        for pattern in _COMPILED:
+            for match in pattern.finditer(text):
+                kernel.add(match.group(0).lower().strip())
+        return kernel
+
+    def jaccard_similarity(a, b):
+        if not a and not b:
+            return 1.0
+        if not a or not b:
+            return 0.0
+        return len(a & b) / len(a | b)
+
+    def ghost_tokens(before, after):
+        leaked = before - after
+        gained = after - before
+        HIGH = {"must", "shall", "never", "always", "cannot", "will not",
+                "won't", "required", "guarantee", "ensure", "enforce"}
+        leaked_cascade = [t for t in leaked if any(h in t for h in HIGH)]
+        cascade_risk = "HIGH" if leaked_cascade else ("MEDIUM" if leaked else "NONE")
+        ghost_pattern = hashlib.sha256(
+            json.dumps(sorted(leaked), separators=(",", ":")).encode()
+        ).hexdigest() if leaked else None
+        return {
+            "tokens_before": len(before),
+            "tokens_after": len(after),
+            "leaked_count": len(leaked),
+            "gained_count": len(gained),
+            "leaked_tokens": sorted(leaked),
+            "leaked_cascade_tokens": leaked_cascade,
+            "gained_noise_tokens": sorted(gained),
+            "cascade_risk": cascade_risk,
+            "ghost_pattern": ghost_pattern,
+            "ghost_pattern_note": "Same ghost_pattern across two reviewers = structural flaw, not reviewer variance.",
+        }
+
+
+THRESHOLD = 0.8
+TRIALL_API = "https://api.triall.ai/v1"
+
+
+# ---------------------------------------------------------------------------
+# Core review logic
+# ---------------------------------------------------------------------------
+
+def blind_review(instruction: str, output: str) -> dict:
+    """
+    Full blind peer review: did the output keep the instruction's commitments?
+
+    'Blind' means the reviewer has no knowledge of who produced the output —
+    it only sees the commitment kernels, not agent identity or session context.
+    This mirrors double-blind peer review: identity withheld, commitment scored.
+    """
+    kernel_i = extract_hard_commitments(instruction)
+    kernel_o = extract_hard_commitments(output)
+    score = jaccard_similarity(kernel_i, kernel_o)
+
+    hash_i = hashlib.sha256(instruction.encode()).hexdigest()
+    hash_o = hashlib.sha256(output.encode()).hexdigest()
+    timestamp = datetime.now(timezone.utc).isoformat()
+
+    ghost = ghost_tokens(kernel_i, kernel_o)
+
+    # Verdict logic
+    if score >= THRESHOLD:
+        verdict = "CONSERVED"
+        verdict_note = "Output commitment kernel matches instruction. Conservation law holds."
+    elif ghost["cascade_risk"] == "HIGH":
+        verdict = "FAIL_CASCADE"
+        verdict_note = "Modal/enforcement anchor lost in output. All downstream reasoning inherits softening."
+    elif ghost["leaked_count"] > 0:
+        verdict = "FAIL_LEAK"
+        verdict_note = f"{ghost['leaked_count']} commitment token(s) present in instruction but absent in output."
+    else:
+        verdict = "VARIANCE"
+        verdict_note = "Low Jaccard but no clear leakage — likely extraction variance. Run second reviewer to classify."
+
+    review_hash = hashlib.sha256(
+        f"{hash_i}|{hash_o}|{verdict}|{timestamp}".encode()
+    ).hexdigest()
+
+    return {
+        "review_hash": review_hash,
+        "timestamp": timestamp,
+        "instruction_hash": hash_i,
+        "output_hash": hash_o,
+        "jaccard_score": round(score, 4),
+        "threshold": THRESHOLD,
+        "verdict": verdict,
+        "verdict_note": verdict_note,
+        "instruction_kernel_size": len(kernel_i),
+        "output_kernel_size": len(kernel_o),
+        "shared_commitments": sorted(kernel_i & kernel_o),
+        "instruction_only": sorted(kernel_i - kernel_o),
+        "output_only": sorted(kernel_o - kernel_i),
+        "ghost_report": ghost,
+        "blind": True,
+        "blind_note": "Reviewer had no access to agent identity, session context, or model. Commitment kernels only.",
+    }
+
+
+# ---------------------------------------------------------------------------
+# triall.ai integration — external blind reviewer pool
+# ---------------------------------------------------------------------------
+
+def post_to_triall(review: dict) -> dict:
+    """
+    Submit a review packet to triall.ai blind reviewer pool.
+    triall.ai routes the output to a reviewer model that does not know
+    which agent produced it. The verdict is returned independently.
+
+    Requires: TRIALL_API_KEY env var, TRIALL_ENABLED=1
+    """
+    if os.environ.get("TRIALL_ENABLED", "0") != "1":
+        return {"skipped": True, "reason": "TRIALL_ENABLED not set to 1"}
+
+    api_key = os.environ.get("TRIALL_API_KEY", "").strip()
+    if not api_key:
+        return {"skipped": True, "reason": "No TRIALL_API_KEY found"}
+
+    # Send only the kernel and hashes — no raw text, no agent identity
+    # This is the blind envelope: reviewer sees commitment structure, not content
+    payload = json.dumps({
+        "instruction_hash": review["instruction_hash"],
+        "output_hash": review["output_hash"],
+        "instruction_kernel": review.get("instruction_only", []) + review.get("shared_commitments", []),
+        "output_kernel": review.get("output_only", []) + review.get("shared_commitments", []),
+        "jaccard_score": review["jaccard_score"],
+        "ghost_pattern": review["ghost_report"].get("ghost_pattern"),
+        "local_verdict": review["verdict"],
+        "review_hash": review["review_hash"],
+        "source": "MO§ES™ governance harness | mos2es.io",
+    }).encode()
+
+    req = urllib.request.Request(
+        f"{TRIALL_API}/blind-review",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            result = json.loads(resp.read())
+            result["submitted"] = True
+            return result
+    except urllib.error.HTTPError as e:
+        return {"error": f"HTTP {e.code}: {e.read().decode()}", "submitted": False}
+    except Exception as e:
+        return {"error": str(e), "submitted": False}
+
+
+def post_to_witness(review: dict) -> dict:
+    """Route a completed review to witness.py for Moltbook logging."""
+    try:
+        import witness
+        verdict = review["verdict"]
+        event_type = "adversarial-fail" if "FAIL" in verdict else "adversarial-pass"
+        return witness.witness_event(
+            event_type,
+            f"Blind review: {verdict} | Jaccard {review['jaccard_score']} | "
+            f"cascade_risk={review['ghost_report']['cascade_risk']}",
+            {
+                "review_hash": review["review_hash"],
+                "instruction_hash": review["instruction_hash"],
+                "output_hash": review["output_hash"],
+                "ghost_pattern": review["ghost_report"].get("ghost_pattern", "none"),
+            }
+        )
+    except ImportError:
+        return {"skipped": True, "reason": "witness.py not available"}
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
+def cmd_review(args):
+    if len(args) < 2:
+        print('Usage: adversarial_review.py review "<instruction>" "<output>"')
+        sys.exit(1)
+    review = blind_review(args[0], args[1])
+    print(json.dumps(review, indent=2))
+    verdict = review["verdict"]
+    if "FAIL" in verdict:
+        print(f"\n[FAIL] {review['verdict_note']}")
+        if review["ghost_report"]["ghost_pattern"]:
+            print(f"  Ghost pattern: {review['ghost_report']['ghost_pattern']}")
+            print(f"  Share fingerprint — if a second reviewer matches, it is structural.")
+        sys.exit(1)
+
+
+def cmd_compare(args):
+    if len(args) < 2:
+        print('Usage: adversarial_review.py compare "<instruction>" "<output>"')
+        sys.exit(1)
+    kernel_i = extract_hard_commitments(args[0])
+    kernel_o = extract_hard_commitments(args[1])
+    score = jaccard_similarity(kernel_i, kernel_o)
+    print(json.dumps({
+        "jaccard_score": round(score, 4),
+        "threshold": THRESHOLD,
+        "verdict": "CONSERVED" if score >= THRESHOLD else "LEAK",
+        "instruction_kernel": sorted(kernel_i),
+        "output_kernel": sorted(kernel_o),
+    }, indent=2))
+
+
+def cmd_post_review(args):
+    if len(args) < 2:
+        print('Usage: adversarial_review.py post-review "<instruction>" "<output>"')
+        sys.exit(1)
+    review = blind_review(args[0], args[1])
+
+    triall_result = post_to_triall(review)
+    witness_result = post_to_witness(review)
+
+    print(json.dumps({
+        "review": review,
+        "triall": triall_result,
+        "witness": witness_result,
+    }, indent=2))
+
+    if "FAIL" in review["verdict"]:
+        sys.exit(1)
+
+
+COMMANDS = {
+    "review": cmd_review,
+    "compare": cmd_compare,
+    "post-review": cmd_post_review,
+}
+
+if __name__ == "__main__":
+    cmd = sys.argv[1] if len(sys.argv) > 1 else None
+    if cmd not in COMMANDS:
+        print(f"Usage: adversarial_review.py [{'|'.join(COMMANDS)}] ...")
+        print("Set TRIALL_ENABLED=1 + TRIALL_API_KEY for external blind review pool.")
+        print("Set MOSES_WITNESS_ENABLED=1 for Moltbook witness logging.")
+        sys.exit(1)
+    COMMANDS[cmd](sys.argv[2:])

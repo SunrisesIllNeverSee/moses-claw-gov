@@ -6,11 +6,14 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.5.2
+    version: 0.5.3
     depends:
       - coverify
     env:
       - MOSES_OPERATOR_SECRET
+      - TRIALL_API_KEY
+      - TRIALL_ENABLED
+      - MOSES_WITNESS_ENABLED
     bins:
       - python3
     stateDirs:
@@ -129,6 +132,8 @@ scripts/
   progress.py          ← Progress tracking across governed steps
   govern_loop.py       ← ReAct-style governance enforcement loop
   witness.py           ← External witness logger (Moltbook second ledger)
+  adversarial_review.py ← Blind peer review — did output keep instruction's commitments?
+                          triall.ai integration for external reviewer pool.
 references/
   modes.md             ← Full mode definitions and constraints
   postures.md          ← SCOUT/DEFENSE/OFFENSE specs

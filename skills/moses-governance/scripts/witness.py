@@ -21,6 +21,8 @@ Environment:
   MOLTBOOK_API_KEY       — Moltbook API key (or read from ~/.hange/moltbook_api_key)
   MOLTBOOK_SUBMOLT       — submolt to post to (default: "general")
   MOSES_WITNESS_ENABLED  — set to "1" to enable (off by default, opt-in)
+  TRIALL_ENABLED         — set to "1" to forward adversarial review results to triall.ai
+  TRIALL_API_KEY         — triall.ai API key for blind reviewer pool
 """
 
 import hashlib
