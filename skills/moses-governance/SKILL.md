@@ -11,8 +11,9 @@ metadata:
       - coverify
     env:
       - MOSES_OPERATOR_SECRET
-      - TRIALL_API_KEY
-      - TRIALL_ENABLED
+      - BLIND_REVIEWER_URL
+      - BLIND_REVIEWER_KEY
+      - BLIND_REVIEWER_ENABLED
       - MOSES_WITNESS_ENABLED
     bins:
       - python3
