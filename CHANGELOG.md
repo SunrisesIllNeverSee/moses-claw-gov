@@ -8,7 +8,7 @@ Tracks substantive builds by date. Commit hashes for full diff.
 
 ---
 
-## 2026-03-14
+## v0.6.0 — 2026-03-14
 
 ### BUILD-005 — Adversarial Blind Peer Review (`9643bda`)
 - `adversarial_review.py` — blind peer review of governed output vs. original instruction commitment kernel
