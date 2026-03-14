@@ -11,9 +11,9 @@ metadata:
       - coverify
     env:
       - MOSES_OPERATOR_SECRET
-      - BLIND_REVIEWER_URL
-      - BLIND_REVIEWER_KEY
-      - BLIND_REVIEWER_ENABLED
+      - REFEREE_URL
+      - REFEREE_KEY
+      - REFEREE_ENABLED
       - MOSES_WITNESS_ENABLED
     bins:
       - python3

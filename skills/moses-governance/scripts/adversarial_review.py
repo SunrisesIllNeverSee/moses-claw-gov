@@ -25,9 +25,9 @@ Commands:
 
 Environment:
   MOSES_WITNESS_ENABLED   — set to "1" to enable external witness posting
-  BLIND_REVIEWER_URL      — endpoint for external blind reviewer (any provider)
-  BLIND_REVIEWER_KEY      — API key for external blind reviewer
-  BLIND_REVIEWER_ENABLED  — set to "1" to forward results to external reviewer
+  REFEREE_URL      — endpoint for external blind reviewer (any provider)
+  REFEREE_KEY      — API key for external blind reviewer
+  REFEREE_ENABLED  — set to "1" to forward results to external reviewer
 """
 
 import hashlib
@@ -108,7 +108,7 @@ except ImportError:
 
 
 THRESHOLD = 0.8
-DEFAULT_REVIEWER_URL = None  # set BLIND_REVIEWER_URL in environment
+DEFAULT_REVIEWER_URL = None  # set REFEREE_URL in environment
 
 
 # ---------------------------------------------------------------------------
@@ -175,28 +175,28 @@ def blind_review(instruction: str, output: str) -> dict:
 # triall.ai integration — external blind reviewer pool
 # ---------------------------------------------------------------------------
 
-def post_to_external_reviewer(review: dict) -> dict:
+def post_to_referee(review: dict) -> dict:
     """
-    Submit a review packet to an external blind reviewer endpoint.
+    Submit a review packet to an outside referee endpoint.
     Provider-agnostic: any service that accepts the blind envelope schema
-    can act as the external reviewer. Set BLIND_REVIEWER_URL to plug in.
+    can act as the outside referee. Set REFEREE_URL to plug in.
 
     The blind envelope contains commitment kernels and hashes only —
     no raw text, no agent identity. The reviewer sees commitment structure,
     not who produced the output. This is double-blind by design.
 
-    Requires: BLIND_REVIEWER_URL, BLIND_REVIEWER_KEY, BLIND_REVIEWER_ENABLED=1
+    Requires: REFEREE_URL, REFEREE_KEY, REFEREE_ENABLED=1
     """
-    if os.environ.get("BLIND_REVIEWER_ENABLED", "0") != "1":
-        return {"skipped": True, "reason": "BLIND_REVIEWER_ENABLED not set to 1"}
+    if os.environ.get("REFEREE_ENABLED", "0") != "1":
+        return {"skipped": True, "reason": "REFEREE_ENABLED not set to 1"}
 
-    endpoint = os.environ.get("BLIND_REVIEWER_URL", "").strip()
+    endpoint = os.environ.get("REFEREE_URL", "").strip()
     if not endpoint:
-        return {"skipped": True, "reason": "No BLIND_REVIEWER_URL configured"}
+        return {"skipped": True, "reason": "No REFEREE_URL configured"}
 
-    api_key = os.environ.get("BLIND_REVIEWER_KEY", "").strip()
+    api_key = os.environ.get("REFEREE_KEY", "").strip()
     if not api_key:
-        return {"skipped": True, "reason": "No BLIND_REVIEWER_KEY found"}
+        return {"skipped": True, "reason": "No REFEREE_KEY found"}
 
     # Blind envelope — commitment structure only, no raw content, no agent identity
     payload = json.dumps({
@@ -293,7 +293,7 @@ def cmd_post_review(args):
         sys.exit(1)
     review = blind_review(args[0], args[1])
 
-    triall_result = post_to_external_reviewer(review)
+    triall_result = post_to_referee(review)
     witness_result = post_to_witness(review)
 
     print(json.dumps({
@@ -316,7 +316,7 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else None
     if cmd not in COMMANDS:
         print(f"Usage: adversarial_review.py [{'|'.join(COMMANDS)}] ...")
-        print("Set BLIND_REVIEWER_ENABLED=1 + BLIND_REVIEWER_URL + BLIND_REVIEWER_KEY for external blind review.")
+        print("Set REFEREE_ENABLED=1 + REFEREE_URL + REFEREE_KEY for external blind review.")
         print("Set MOSES_WITNESS_ENABLED=1 for Moltbook witness logging.")
         sys.exit(1)
     COMMANDS[cmd](sys.argv[2:])
