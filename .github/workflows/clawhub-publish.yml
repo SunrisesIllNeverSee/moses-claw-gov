@@ -27,6 +27,4 @@ jobs:
 
       - name: Sync core skills
         run: |
-          clawhub sync moses-governance --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
-          clawhub sync lineage-claws --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
-          clawhub sync coverify --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
+          clawhub sync --all --bump patch --changelog "Auto-publish from commit ${{ github.sha }}"
