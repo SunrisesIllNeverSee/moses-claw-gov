@@ -5,11 +5,10 @@ metadata:
   openclaw:
     emoji: 👥
     tags: [multi-agent, hierarchy, governance, sequencing]
-requires:
-  env:
-    - MOSES_OPERATOR_SECRET
-  stateDirs:
-    - ~/.openclaw/governance
+    env:
+      - MOSES_OPERATOR_SECRET
+    stateDirs:
+      - ~/.openclaw/governance
 example: |
   # Install full bundle: moses-roles + moses-modes + moses-postures + moses-audit
   # Then add workspace/AGENTS.md overrides for each agent

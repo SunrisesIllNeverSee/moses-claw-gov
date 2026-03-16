@@ -5,10 +5,9 @@ metadata:
   openclaw:
     emoji: 🎛️
     tags: [governance, modes, constraints, behavioral]
-    version: 0.1.1
-requires:
-  stateDirs:
-    - ~/.openclaw/governance
+    version: 0.1.2
+    stateDirs:
+      - ~/.openclaw/governance
 example: |
   # Set mode via operator command: /govern high-security
   # Or directly: python3 scripts/init_state.py set --mode high-security
