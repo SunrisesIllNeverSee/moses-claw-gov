@@ -85,6 +85,21 @@ If out-of-sequence: Block response, log violation, notify operator.
 
 ---
 
+## Network Behavior — Off By Default
+
+All network features require explicit opt-in. Nothing is transmitted without operator configuration.
+
+| Feature | Env var to enable | What gets sent | What stays local |
+|---|---|---|---|
+| External witness log | `MOSES_WITNESS_ENABLED=1` + `MOLTBOOK_API_KEY` | Event type, governance state, event hash | Raw task content, agent identity |
+| Outside referee | `REFEREE_ENABLED=1` + `REFEREE_URL` + `REFEREE_KEY` | Commitment kernels + hashes only | Raw text, agent identity, session data |
+
+Both features are **off by default**. Neither raw text nor agent identity leaves the system. The blind envelope sent to the outside referee contains commitment kernels and SHA-256 hashes only — by design.
+
+`MOSES_OPERATOR_SECRET` is used exclusively for local HMAC signing. It is never transmitted.
+
+---
+
 ## Tools You MUST Use
 
 When running under an MCP server, call these tools by name:
