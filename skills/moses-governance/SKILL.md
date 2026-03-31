@@ -15,6 +15,7 @@ metadata:
       - REFEREE_KEY
       - REFEREE_ENABLED
       - MOSES_WITNESS_ENABLED
+      - MOLTBOOK_API_KEY
     bins:
       - python3
     stateDirs:
