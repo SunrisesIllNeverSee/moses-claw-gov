@@ -6,7 +6,7 @@ metadata:
   openclaw:
     emoji: ⚖️
     tags: [governance, harness, multi-agent, audit, constitution, safety]
-    version: 0.5.3
+    version: 0.5.4
     depends:
       - coverify
     env:
@@ -15,6 +15,8 @@ metadata:
       - REFEREE_KEY
       - REFEREE_ENABLED
       - MOSES_WITNESS_ENABLED
+      - MOLTBOOK_API_KEY
+      - MOLTBOOK_SUBMOLT
     bins:
       - python3
     stateDirs:
@@ -91,7 +93,7 @@ All network features require explicit opt-in. Nothing is transmitted without ope
 
 | Feature | Env var to enable | What gets sent | What stays local |
 |---|---|---|---|
-| External witness log | `MOSES_WITNESS_ENABLED=1` + `MOLTBOOK_API_KEY` | Event type, governance state, event hash | Raw task content, agent identity |
+| External witness log | `MOSES_WITNESS_ENABLED=1` + `MOLTBOOK_API_KEY` (`MOLTBOOK_SUBMOLT` optional) | Event type, governance state, event hash | Raw task content, agent identity |
 | Outside referee | `REFEREE_ENABLED=1` + `REFEREE_URL` + `REFEREE_KEY` | Commitment kernels + hashes only | Raw text, agent identity, session data |
 
 Both features are **off by default**. Neither raw text nor agent identity leaves the system. The blind envelope sent to the outside referee contains commitment kernels and SHA-256 hashes only — by design.
