@@ -10,7 +10,7 @@ PRIMARY_SKILL="moses-governance"
 PRIMARY_SKILL_FILE="${REPO_ROOT}/skills/${PRIMARY_SKILL}/SKILL.md"
 BUILD_TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
-# Keep the bundle scope explicit so rebuilds match the original 9-skill upload.
+# Bundle scope — 10 skills (v1.0.2 adds moses-stamp).
 SKILLS=(
   "coverify"
   "lineage-claws"
@@ -21,6 +21,7 @@ SKILLS=(
   "moses-modes"
   "moses-postures"
   "moses-roles"
+  "moses-stamp"
 )
 
 require_cmd() {
