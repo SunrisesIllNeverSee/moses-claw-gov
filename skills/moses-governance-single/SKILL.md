@@ -7,7 +7,10 @@ metadata:
     tags: [governance, audit, constitution, safety, modes, postures]
     version: 0.1.2
     env:
-      - MOSES_OPERATOR_SECRET
+      - name: MOSES_OPERATOR_SECRET
+        required: false
+        sensitive: true
+        purpose: "Optional local HMAC signing gate. Skill operates fully without it."
     bins:
       - python3
     stateDirs:
