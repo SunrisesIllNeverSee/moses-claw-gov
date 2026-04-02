@@ -11,3 +11,9 @@
 [42380244ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [42380246ms] [LOG] Attempting reconnect in 818ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [42381352ms] [LOG] WebSocket reconnected at t=42381.2s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[46248531ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[46248533ms] [LOG] Attempting reconnect in 684ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[46249911ms] [LOG] WebSocket reconnected at t=46249.8s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68181754ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68181756ms] [LOG] Attempting reconnect in 681ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68182882ms] [LOG] WebSocket reconnected at t=68182.8s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0

@@ -2,3 +2,12 @@
 [23856511ms] [LOG] Attempting reconnect in 172ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [23857027ms] [LOG] WebSocket reconnected at t=23856.9s after disconnect due to InactiveServer @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [23871521ms] [ERROR] WebSocket connection to 'wss://wry-manatee-359.convex.cloud/api/1.34.0/sync' failed: Error in connection establishment: net::ERR_CONNECTION_TIMED_OUT @ https://clawhub.ai/assets/api-xEx4ztDA.js:1
+[52682787ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[52682791ms] [LOG] Attempting reconnect in 1198ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[52684260ms] [LOG] WebSocket reconnected at t=52684.3s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[63528890ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[63528895ms] [LOG] Attempting reconnect in 796ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[63530143ms] [LOG] WebSocket reconnected at t=63530.1s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68647878ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68647883ms] [LOG] Attempting reconnect in 899ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[68649261ms] [LOG] WebSocket reconnected at t=68649.2s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
