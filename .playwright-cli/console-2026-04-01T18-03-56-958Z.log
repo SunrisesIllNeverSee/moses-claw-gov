@@ -1,0 +1,13 @@
+[23545052ms] [LOG] Attempting reconnect in 115ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23550491ms] [ERROR] WebSocket connection to 'wss://wry-manatee-359.convex.cloud/api/1.34.0/sync' failed: Error in connection establishment: net::ERR_NAME_NOT_RESOLVED @ https://clawhub.ai/assets/api-xEx4ztDA.js:1
+[23550492ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23550492ms] [LOG] Attempting reconnect in 1550ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23551660ms] [LOG] Network recovery detected, reconnecting immediately @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23552466ms] [ERROR] WebSocket connection to 'wss://wry-manatee-359.convex.cloud/api/1.34.0/sync' failed: Error in connection establishment: net::ERR_NAME_NOT_RESOLVED @ https://clawhub.ai/assets/api-xEx4ztDA.js:1
+[23552466ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23552466ms] [LOG] Attempting reconnect in 5008ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23557738ms] [LOG] WebSocket reconnected at t=23557.6s after disconnect due to InactiveServer @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[23557738ms] [LOG] Network recovery reconnect saved ~0s of waiting @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[42380244ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[42380246ms] [LOG] Attempting reconnect in 818ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[42381352ms] [LOG] WebSocket reconnected at t=42381.2s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
