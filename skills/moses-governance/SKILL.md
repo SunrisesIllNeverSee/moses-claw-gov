@@ -10,11 +10,26 @@ metadata:
     depends:
       - coverify
     env:
-      - MOSES_OPERATOR_SECRET
-      - REFEREE_URL
-      - REFEREE_KEY
-      - REFEREE_ENABLED
-      - MOSES_WITNESS_ENABLED
+      - name: MOSES_OPERATOR_SECRET
+        required: false
+        sensitive: true
+        purpose: "Optional local HMAC attestation and signing gate. Never transmitted."
+      - name: REFEREE_URL
+        required: false
+        sensitive: false
+        purpose: "Optional blind-review endpoint. Only used if REFEREE_ENABLED=1."
+      - name: REFEREE_KEY
+        required: false
+        sensitive: true
+        purpose: "API key for optional referee endpoint. Only used if REFEREE_ENABLED=1."
+      - name: REFEREE_ENABLED
+        required: false
+        sensitive: false
+        purpose: "Opt-in flag for external blind-review. Off by default."
+      - name: MOSES_WITNESS_ENABLED
+        required: false
+        sensitive: false
+        purpose: "Opt-in flag for Moltbook witness logger. Off by default."
     bins:
       - python3
     stateDirs:
