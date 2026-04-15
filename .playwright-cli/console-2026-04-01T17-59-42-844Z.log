@@ -11,3 +11,44 @@
 [68647878ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [68647883ms] [LOG] Attempting reconnect in 899ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
 [68649261ms] [LOG] WebSocket reconnected at t=68649.2s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[76000780ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[76000782ms] [LOG] Attempting reconnect in 1019ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[76002275ms] [LOG] WebSocket reconnected at t=76002.2s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[82679145ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[82679153ms] [LOG] Attempting reconnect in 566ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[82683238ms] [LOG] WebSocket reconnected at t=82683.1s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[84031402ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[84031403ms] [LOG] Attempting reconnect in 1158ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[84032943ms] [LOG] WebSocket reconnected at t=84032.8s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[85143454ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[85143455ms] [LOG] Attempting reconnect in 988ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[85144758ms] [LOG] WebSocket reconnected at t=85144.6s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[119039427ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[119039440ms] [LOG] Attempting reconnect in 1064ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[119040892ms] [LOG] WebSocket reconnected at t=119040.8s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[136159835ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[136159836ms] [LOG] Attempting reconnect in 1359ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[136161417ms] [LOG] WebSocket reconnected at t=136161.4s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[138756763ms] [LOG] Attempting reconnect in 92ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[138761156ms] [LOG] WebSocket reconnected at t=138761.2s after disconnect due to InactiveServer @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[138821154ms] [LOG] Attempting reconnect in 251ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[138881415ms] [LOG] Attempting reconnect in 287ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[138914838ms] [LOG] WebSocket reconnected at t=138914.9s after disconnect due to InactiveServer @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144274419ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144274427ms] [LOG] Attempting reconnect in 832ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144275989ms] [LOG] WebSocket reconnected at t=144276s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144682651ms] [LOG] Attempting reconnect in 113ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144714919ms] [LOG] WebSocket reconnected at t=144714.9s after disconnect due to InactiveServer @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[144772374ms] [LOG] received query results totaling 0MB which took more than 20s to arrive (57394ms) @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[222076074ms] [LOG] WebSocket closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[222076082ms] [LOG] Attempting reconnect in 936ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[222077377ms] [LOG] WebSocket reconnected at t=222077.1s after disconnect due to closed with code 1006 @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267278373ms] [LOG] WebSocket closed with code 1011: InternalServerError @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267278377ms] [LOG] Attempting reconnect in 601ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267279363ms] [LOG] WebSocket reconnected at t=267279s after disconnect due to InternalServerError @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267279363ms] [LOG] WebSocket closed with code 1013: ServiceUnavailable @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267279363ms] [LOG] Attempting reconnect in 5046ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267284968ms] [LOG] WebSocket reconnected at t=267284.6s after disconnect due to ServiceUnavailable @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267284968ms] [LOG] WebSocket closed with code 1013: ServiceUnavailable @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267284968ms] [LOG] Attempting reconnect in 6134ms @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
+[267291706ms] [LOG] WebSocket reconnected at t=267291.3s after disconnect due to ServiceUnavailable @ https://clawhub.ai/assets/api-xEx4ztDA.js:0
