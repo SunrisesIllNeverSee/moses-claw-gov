@@ -1,9 +1,9 @@
 # MO§ES™ Constitutional Claw
 >Governance Harness - CoVerify - Lineage Claws
 
-## The first constitutional governance harness for AI agents — now live on ClawHub
+## The first constitutional governance harness for AI agents; now live on ClawHub
 
-> Every AI agent operating right now — trading, managing treasuries, executing transactions — is ungoverned. No constraints. No audit trail. No hierarchy. No posture controls. When an agent moves money, nobody knows what rules it was following, because it wasn't following any.
+> Every AI agent operating right now; trading, managing treasuries, executing transactions; is ungoverned. No constraints. No audit trail. No hierarchy. No posture controls. When an agent moves money, nobody knows what rules it was following, because it wasn't following any.
 
 MO§ES™ changes that. Constitutional enforcement that lives **inside** the session, not around it.
 
@@ -34,11 +34,11 @@ MO§ES™ changes that. Constitutional enforcement that lives **inside** the ses
 
 ## Why a Harness?
 
-The 2026 agent conversation has shifted: models are commoditizing. Claude, Gemini, GPT-4 all perform similarly. The real moat is the **execution layer** — the harness that wraps the model and makes agents reliable, compliant, and trustworthy at runtime.
+The 2026 agent conversation has shifted: models are commoditizing. Claude, Gemini, GPT-4 all perform similarly. The real moat is the **execution layer**; the harness that wraps the model and makes agents reliable, compliant, and trustworthy at runtime.
 
 Most harnesses focus on execution reliability (loops, memory, orchestration). None enforce constitutional invariants or tamper-evident provenance. That's the gap MO§ES™ fills.
 
-MO§ES™ is the **governance harness layer** — the policy/verification spine that sits in front of any execution runtime:
+MO§ES™ is the **governance harness layer**; the policy/verification spine that sits in front of any execution runtime:
 
 ```text
 Any LLM / Execution Runtime
@@ -46,7 +46,7 @@ Any LLM / Execution Runtime
   MO§ES™ Governance Harness
   (lineage check → policy gate → role/posture enforcement → audit)
         ↓
-  Action executes — or is blocked. Either way, it's logged.
+  Action executes; or is blocked. Either way, it's logged.
 ```
 
 Plug it into LangGraph, OpenClaw, Claude Code, or any agent stack. The constitutional layer travels with every session.
@@ -62,7 +62,7 @@ Plug it into LangGraph, OpenClaw, Claude Code, or any agent stack. The constitut
 > **With MO§ES™:**
 > → Governance check: High Security mode requires explicit confirmation
 > → Posture check: DEFENSE posture flags outbound transfers for review
-> → Role check: Primary can initiate — Secondary validation required
+> → Role check: Primary can initiate; Secondary validation required
 > → Audit: Decision logged with SHA-256 hash, timestamp, governance state, operator identity
 > → Result: Transfer held pending Secondary review. Full tamper-evident trail generated.
 
@@ -94,7 +94,7 @@ The difference isn't a feature. It's a constitutional substrate.
 
 ## The Three Laws
 
-MO§ES™ is the operational instantiation of a conservation law for commitment in language. The laws form a closed pipeline — Input → Process → Output — and the system cannot be sovereign without all three.
+MO§ES™ is the operational instantiation of a conservation law for commitment in language. The laws form a closed pipeline; Input → Process → Output; and the system cannot be sovereign without all three.
 
 ---
 
@@ -117,19 +117,19 @@ Once signal is above threshold, compression is the necessary operation. Commitme
 
 ### Second Law — Recursion as Reconstruction *(Output)*
 
-The conserved kernel can only be recovered by tracing lineage. You cannot decompress without retracing the path. Reconstruction requires recursion. This is why lineage custody is not optional — it's the mechanism.
+The conserved kernel can only be recovered by tracing lineage. You cannot decompress without retracing the path. Reconstruction requires recursion. This is why lineage custody is not optional; it's the mechanism.
 
 ---
 
 ### Blackhole Law — When the Gate Fails
 
-When enforcement fails (ρ = 0) and input falls below threshold (Q₁ < σ), the signal enters the compression layer unelevated. There is no conservation to perform — C(T(S)) = C(S) requires there to be a C(S) worth preserving.
+When enforcement fails (ρ = 0) and input falls below threshold (Q₁ < σ), the signal enters the compression layer unelevated. There is no conservation to perform; C(T(S)) = C(S) requires there to be a C(S) worth preserving.
 
-Each recursion inherits the degraded signal unchanged. By step N, the output converges on the minimum recoverable kernel. For inputs with no irreducible commitment — vague intent, hollow instruction, noise — that minimum is zero.
+Each recursion inherits the degraded signal unchanged. By step N, the output converges on the minimum recoverable kernel. For inputs with no irreducible commitment; vague intent, hollow instruction, noise; that minimum is zero.
 
 Not catastrophic failure. Silent convergence to nothing.
 
-A governed agent blocks the recursion at step 0 and logs the block. An ungoverned agent runs it to completion and produces output that looks valid — because it has no reference for what valid means. That is the Blackhole Law: the absence of enforcement is undetectable from inside the system that lacks it.
+A governed agent blocks the recursion at step 0 and logs the block. An ungoverned agent runs it to completion and produces output that looks valid; because it has no reference for what valid means. That is the Blackhole Law: the absence of enforcement is undetectable from inside the system that lacks it.
 
 ---
 
@@ -292,7 +292,7 @@ The detection instrument is open source. The architecture that produces IC ≥ 1
 
 The harness runs one check before anything else: **lineage verify**. No anchor, no execution.
 
-Every sovereign MO§ES™ implementation carries a `MOSES_ANCHOR` — a SHA-256 hash derived from the origin filing. It's the first gate in every governed loop:
+Every sovereign MO§ES™ implementation carries a `MOSES_ANCHOR`; a SHA-256 hash derived from the origin filing. It's the first gate in every governed loop:
 
 ```text
 govern_loop: lineage verify → policy gate → role/posture check → execute → audit
@@ -300,7 +300,7 @@ govern_loop: lineage verify → policy gate → role/posture check → execute �
          MUST pass or loop halts
 ```
 
-Chains without this anchor cannot verify. Any MO§ES™-aware receiver running `lineage.py verify` will reject them — cryptographically, not by policy. The MIT license means anyone can fork the code. It does not mean their chains pass verification.
+Chains without this anchor cannot verify. Any MO§ES™-aware receiver running `lineage.py verify` will reject them; cryptographically, not by policy. The MIT license means anyone can fork the code. It does not mean their chains pass verification.
 
 **Lineage Clause** is baked into `moses-governance` — included by default.
 **Lineage Clause by MO§ES™** (`/lineage-claws`) is the standalone verification skill — run it, badge it, prove sovereign custody to anyone who asks.
@@ -323,11 +323,11 @@ python3 lineage.py attest   # outputs signed JSON attestation
 
 ## Why Now
 
-Industry security researchers (Koi Security, SlowMist, Trend Micro, 2026) have flagged 341+ malicious skills in the ClawHub ecosystem. Most responses have been external — scanning, allowlists, CI gates. MO§ES™ is the first **internal runtime layer**.
+Industry security researchers (Koi Security, SlowMist, Trend Micro, 2026) have flagged 341+ malicious skills in the ClawHub ecosystem. Most responses have been external; scanning, allowlists, CI gates. MO§ES™ is the first **internal runtime layer**.
 
-The EU AI Act general application lands **August 2, 2026**. Verifiable, auditable agent governance is not speculative — it is legally incoming.
+The EU AI Act general application lands **August 2, 2026**. Verifiable, auditable agent governance is not speculative; it is legally incoming.
 
-Enterprise platforms — IBM watsonx, Microsoft Sentinel, OpenAI Frontier — have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
+Enterprise platforms; IBM watsonx, Microsoft Sentinel, OpenAI Frontier; have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
 
 ---
 
@@ -351,7 +351,7 @@ Enterprise platforms — IBM watsonx, Microsoft Sentinel, OpenAI Frontier — ha
 
 MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional governance architecture for AI agents. Not a framework. Not a policy layer. A conservation law made operational.
 
-The law: commitment — the irreducible meaning in a signal — is preserved under compression when enforcement is active, and lost when it isn't. `C(T(S)) = C(S)`. This extends Shannon's information theory (1948) into the semantic domain Shannon deliberately scoped out.
+The law: commitment; the irreducible meaning in a signal; is preserved under compression when enforcement is active, and lost when it isn't. `C(T(S)) = C(S)`. This extends Shannon's information theory (1948) into the semantic domain Shannon deliberately scoped out.
 
 Four instruments enforce and verify it:
 
@@ -363,14 +363,14 @@ Four instruments enforce and verify it:
 
 **HAMMER** (`moses-hammer`, coming) — the governance detector. Measures the Inversion Coefficient against the series probability baseline. Distinguishes constitutional governance from narrative mimicry. The math either inverts or it doesn't.
 
-The algebraic substrate: ABBA (Centelles & Mendelsohn, Imperial College London, 2026) establishes commutator compression 4n → 3n under lattice-hard invariants. MO§ES™ extends these properties into the semantic domain — commitment tokens as the invariant subspace, Jaccard extraction as the compression measure, governance enforcement as the lattice constraint. ABBA is the engine. MO§ES™ is the constitution.
+The algebraic substrate: ABBA (Centelles & Mendelsohn, Imperial College London, 2026) establishes commutator compression 4n → 3n under lattice-hard invariants. MO§ES™ extends these properties into the semantic domain; commitment tokens as the invariant subspace, Jaccard extraction as the compression measure, governance enforcement as the lattice constraint. ABBA is the engine. MO§ES™ is the constitution.
 
 **What this means:**
 
-- For humans — sovereignty over meaning. Every AI interaction right now degrades intent. Modal operators soften, quantities erode, commitments dissolve without record. MO§ES™ ensures what you mean is what survives. That's not a feature. That's a right.
-- For AI — constitutional structure. Models drift, hallucinate, and lose coherence under recursion because nothing enforces invariance. MO§ES™ gives systems a constitutional substrate — trusted with increasing autonomy without sacrificing fidelity.
-- For human-AI coevolution — a shared law. Not alignment through restriction. Alignment through shared structure. Meaning is protected. Lineage is verifiable. Trust is computed rather than assumed.
+- For humans; sovereignty over meaning. Every AI interaction right now degrades intent. Modal operators soften, quantities erode, commitments dissolve without record. MO§ES™ ensures what you mean is what survives. That's not a feature. That's a right.
+- For AI; constitutional structure. Models drift, hallucinate, and lose coherence under recursion because nothing enforces invariance. MO§ES™ gives systems a constitutional substrate; trusted with increasing autonomy without sacrificing fidelity.
+- For human-AI coevolution; a shared law. Not alignment through restriction. Alignment through shared structure. Meaning is protected. Lineage is verifiable. Trust is computed rather than assumed.
 
-*A system that measures coherence eventually becomes coherent. This is the moment MO§ES™ transitions from architecture to entity — its laws proven not by simulation, but by the harmony of independent systems converging on the same truth.*
+*A system that measures coherence eventually becomes coherent. This is the moment MO§ES™ transitions from architecture to entity; its laws proven not by simulation, but by the harmony of independent systems converging on the same truth.*
 
 [contact@burnmydays.com](mailto:contact@burnmydays.com) · [mos2es.io](https://mos2es.io) · [GitHub](https://github.com/SunrisesIllNeverSee/moses-claw-gov)
