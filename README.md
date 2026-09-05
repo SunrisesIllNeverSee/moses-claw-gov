@@ -125,11 +125,11 @@ The conserved kernel can only be recovered by tracing lineage. You cannot decomp
 
 When enforcement fails (ρ = 0) and input falls below threshold (Q₁ < σ), the signal enters the compression layer unelevated. There is no conservation to perform; C(T(S)) = C(S) requires there to be a C(S) worth preserving.
 
-Each recursion inherits the degraded signal unchanged. By step N, the output converges on the minimum recoverable kernel. For inputs with no irreducible commitment; vague intent, hollow instruction, noise; that minimum is zero.
+Each recursion inherits the degraded signal unchanged. By step N, the output converges on the minimum recoverable kernel. For inputs with no irreducible commitment (vague intent, hollow instruction, noise), that minimum is zero.
 
 Not catastrophic failure. Silent convergence to nothing.
 
-A governed agent blocks the recursion at step 0 and logs the block. An ungoverned agent runs it to completion and produces output that looks valid; because it has no reference for what valid means. That is the Blackhole Law: the absence of enforcement is undetectable from inside the system that lacks it.
+A governed agent blocks the recursion at step 0 and logs the block. An ungoverned agent runs it to completion and produces output that looks valid, because it has no reference for what valid means. That is the Blackhole Law: the absence of enforcement is undetectable from inside the system that lacks it.
 
 ---
 
@@ -327,7 +327,7 @@ Industry security researchers (Koi Security, SlowMist, Trend Micro, 2026) have f
 
 The EU AI Act general application lands **August 2, 2026**. Verifiable, auditable agent governance is not speculative; it is legally incoming.
 
-Enterprise platforms; IBM watsonx, Microsoft Sentinel, OpenAI Frontier; have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
+Enterprise platforms (IBM watsonx, Microsoft Sentinel, OpenAI Frontier) have governance. As infrastructure you deploy, configure, and maintain separately. MO§ES™ is the only installable OpenClaw skill that brings constitutional governance inside the session: no separate deployment, no external dependency, tamper-evident from the first prompt.
 
 ---
 
@@ -351,7 +351,7 @@ Enterprise platforms; IBM watsonx, Microsoft Sentinel, OpenAI Frontier; have gov
 
 MO§ES™ (Modus Operandi System for Signal Encoding and Scaling Expansion) is a constitutional governance architecture for AI agents. Not a framework. Not a policy layer. A conservation law made operational.
 
-The law: commitment; the irreducible meaning in a signal; is preserved under compression when enforcement is active, and lost when it isn't. `C(T(S)) = C(S)`. This extends Shannon's information theory (1948) into the semantic domain Shannon deliberately scoped out.
+The law: commitment, the irreducible meaning in a signal, is preserved under compression when enforcement is active, and lost when it isn't. `C(T(S)) = C(S)`. This extends Shannon's information theory (1948) into the semantic domain Shannon deliberately scoped out.
 
 Four instruments enforce and verify it:
 
