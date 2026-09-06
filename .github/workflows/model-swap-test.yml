@@ -11,13 +11,20 @@ on:
       - 'skills/moses-governance/scripts/commitment_verify.py'
       - 'skills/coverify/scripts/commitment_verify.py'
 
+permissions: {}
+
 jobs:
   model-swap-test:
     name: Commitment kernel extraction — structural regression check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
